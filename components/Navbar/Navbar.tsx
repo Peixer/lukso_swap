@@ -22,7 +22,11 @@ export function Navbar() {
               alt="NFT marketplace sample logo"
             />
           </Link>
-
+          <h2 className={styles.title}>
+            <span>
+                LuksoSwap
+            </span>
+          </h2>
           <div className={styles.navMiddle}>
             <Link href="/buy" className={styles.link}>
               Buy
@@ -31,23 +35,6 @@ export function Navbar() {
               Sell
             </Link>
           </div>
-        </div>
-
-        <div className={styles.navRight}>
-          <div className={styles.navConnect}>
-            <ConnectWallet theme="dark" btnTitle="Connect Wallet" />
-          </div>
-          {address && (
-            <Link className={styles.link} href={`/profile/${address}`}>
-              <Image
-                className={styles.profileImage}
-                src="/user-icon.png"
-                width={42}
-                height={42}
-                alt="Profile"
-              />
-            </Link>
-          )}
         </div>
       </nav>
     </div>

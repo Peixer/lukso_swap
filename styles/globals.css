@@ -23,6 +23,7 @@ body {
   --card-background: #252133;
   --highlighted-background: #202326;
   font-weight: 400;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -41,4 +42,8 @@ h3 {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.swiper-wrapper {
+  transition-timing-function: linear !important;
 }
