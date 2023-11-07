@@ -1,7 +1,7 @@
 import { Device, Platform, WalletModule } from "@web3-onboard/common";
 
 export interface InjectedWalletModule extends WalletModule {
-  injectedNamespace: string;
+  injectedNamespace: any;
   checkProviderIdentity: (helpers: {
     provider: any;
     device: Device;
