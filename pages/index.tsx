@@ -7,6 +7,7 @@ import { use, useEffect, useState } from "react";
 import Carousel from "../components/Carousel/Carousel";
 import { useProfile } from "../lukso/fetchProfile";
 import { useAddress } from "@thirdweb-dev/react";
+import SearchBar, { Suggestion } from "../components/Searchbar/Searchbar";
 
 const buttonStyles = {
   borderRadius: "8px",
@@ -22,15 +23,50 @@ const buttonStyles = {
 };
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    // Apply overflow: hidden to the body element when the Home component mounts
-    document.body.style.overflow = "hidden";
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
-    return () => {
-      // Clean up when the component unmounts
-      document.body.style.overflow = "visible"; // Reset overflow to its default value
-    };
-  }, []);
+  const fetchData = async (searchTerm: string) => {
+    const apiUrl = '/api/proxy';
+    try {
+      const response = await fetch(`${apiUrl}/prod_testnet_universal_profiles/query`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: searchTerm,
+          hitsPerPage: 100,
+          page: 0,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      const suggestions: Suggestion[] = data.hits.map((item: any) => {
+        const { LSP3Profile, address, profileImageUrl, backgroundImageUrl } = item;
+        const name = LSP3Profile?.name || ''; 
+
+        return {
+          name,
+          address,
+          profileImageUrl,
+          backgroundImageUrl,
+        };
+      });
+      
+      setSuggestions(suggestions);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleSearch = (inputValue: string) => {
+    fetchData(inputValue);
+  };
 
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [loading, setLoading] = useState(false); // Initialize loading state
@@ -42,7 +78,6 @@ const Home: NextPage = () => {
     setLoading(false);
   };
   
-
   return (
     <main className={styles.main}>
       {/* Conditionally render the loader */}
@@ -95,6 +130,7 @@ const Home: NextPage = () => {
                     </button>
                   </div>
                 </div>
+                <SearchBar onSearch={handleSearch} suggestions={suggestions} />
               </div>
             </div>
           </div>

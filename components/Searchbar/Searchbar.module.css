@@ -1,0 +1,55 @@
+/* SearchBar.module.css */
+.searchBar {
+    position: relative;
+    display: inline-block;
+    margin: 20px;
+}
+  
+.searchInput {
+width: 300px;
+padding: 10px;
+border: 1px solid lightgray;
+border-radius: 20px;
+font-size: 16px;
+outline: none;
+}
+
+.searchInput::placeholder {
+color: lightgray;
+}
+  
+.suggestionList {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: scroll;
+    padding: 0;
+    margin-top: 5px;
+    position: absolute;
+    background: rgb(69, 68, 68);
+    border: 1px solid lightgray;
+    color: lightgray;
+    position: relative;
+    padding-bottom: 10px; 
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    width: 298px;
+}
+
+.suggestionList li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggestionList li span{
+    color: white;
+}
+
+.suggestionList li:hover {
+    border-radius: 10px;
+    color: rgb(43, 43, 43);
+    background-color: lightgray;
+}
+
+.suggestionList li:hover span{
+    color: black;
+}
