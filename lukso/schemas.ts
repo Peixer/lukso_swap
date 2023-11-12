@@ -91,14 +91,7 @@ export const LSP4Schema: ERC725JSONSchema[] = [
     keyType: 'Array',
     valueType: 'address',
     valueContent: 'Address',
-  },
-  {
-    name: 'LSP4CreatorsMap:<address>',
-    key: '0x6de85eaf5d982b4e5da00000<address>',
-    keyType: 'Mapping',
-    valueType: '(bytes4,bytes8)',
-    valueContent: '(Bytes4,Number)',
-  },
+  }
 ];
 
 // '@erc725/erc725.js/schemas/LSP6KeyManager.json'
@@ -149,12 +142,12 @@ export const LSP6KeyManagerSchema: ERC725JSONSchema[] = [
 
 export const LSP8IdentifiableDigitalAssetSchema: ERC725JSONSchema[] = [
   {
-    name: 'LSP8MetadataJSON:<bytes32>',
-    key: '0x9a26b4060ae7f7d5e3cd0000<bytes32>',
-    keyType: 'Mapping',
-    valueType: 'bytes',
-    valueContent: 'JSONURL',
-  },
+    name : 'LSP8TokenIdType',
+    key: '0x715f248956de7ce65e94d9d836bfead479f7e70d69b718d47bfe7b00e05b4fe4',
+    keyType: 'Singleton',
+    valueType: 'uint256',
+    valueContent: 'Number'
+  }
 ];
 
 // '@erc725/erc725.js/schemas/LSP10ReceivedVaults.json'
@@ -177,14 +170,13 @@ export const LSP10ReceivedVaultsSchema: ERC725JSONSchema[] = [
 
 // Parameters for the ERC725 instance
 const config = { ipfsGateway: NETWORKS.l16.ipfs.url };
+const TESTNET_RPC_ENDPOINT = 'https://lukso-testnet.rpc.thirdweb.com';
 
 export function getInstance(
   providedSchema: ERC725JSONSchema[],
   contractAddress?: string,
   provider?: any
 ) {
-  // Instantiate the asset
-  const erc725 = new ERC725(providedSchema, contractAddress, provider, config);
-
+  const erc725 = new ERC725(providedSchema, contractAddress, provider ?? TESTNET_RPC_ENDPOINT, config);
   return erc725;
 }

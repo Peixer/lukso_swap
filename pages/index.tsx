@@ -3,24 +3,10 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import loader from "../styles/Loader.module.css";
 import { useConnectWallet } from "@web3-onboard/react";
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 import Carousel from "../components/Carousel/Carousel";
 import { useProfile } from "../lukso/fetchProfile";
-import { useAddress } from "@thirdweb-dev/react";
 import SearchBar, { Suggestion } from "../components/Searchbar/Searchbar";
-
-const buttonStyles = {
-  borderRadius: "8px",
-  background: "#7448db",
-  border: "none",
-  fontSize: "18px",
-  fontWeight: "600",
-  cursor: "pointer",
-  color: "white",
-  padding: "14px 16px",
-  marginTop: "15px",
-  fontFamily: "inherit",
-};
 
 const Home: NextPage = () => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -113,10 +99,14 @@ const Home: NextPage = () => {
                   <b className={styles.white}>Easily.</b>
                 </h2>
 
-                <div className={styles.heroCtaContainer}>
+                {/* Conditionally render the searchbar */}
+                {wallet ? (
+                  <SearchBar onSearch={handleSearch} suggestions={suggestions} />
+                ) : (
+                  <div className={styles.heroCtaContainer}>
                   <div className={styles.connect}>
                     <button
-                      style={buttonStyles}
+                      className={styles.connectButton}
                       disabled={connecting}
                       onClick={() =>
                         wallet ? disconnect(wallet) : loadingConnect()
@@ -130,7 +120,7 @@ const Home: NextPage = () => {
                     </button>
                   </div>
                 </div>
-                <SearchBar onSearch={handleSearch} suggestions={suggestions} />
+                )}
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, MouseEvent} from 'react';
+import { useRouter } from 'next/router';
 import styles from './Searchbar.module.css'; 
 
 export interface Suggestion{
@@ -14,6 +15,8 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions }) => {
+    const router = useRouter();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
   
@@ -28,6 +31,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions }) => {
       setSearchTerm(suggestion.address);
       onSearch(suggestion.address);
       setShowSuggestions(false);
+
+      router.push(`/create/${suggestion.address}`);
     };
 
   return (

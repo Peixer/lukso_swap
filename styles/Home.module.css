@@ -366,3 +366,16 @@
     max-height: 540px;
   }
 }
+
+.connectButton{
+  border-radius: 8px;
+  background: #7448db;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  padding: 14px 16px;
+  margin-top: 15px;
+  font-family: inherit;
+}

@@ -7,8 +7,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const algoliaHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'x-algolia-agent': 'Algolia for JavaScript (4.20.0); Browser (lite)',
-      'x-algolia-api-key': '5981bf15ffc7630353478168f2574228',
-      'x-algolia-application-id': 'YHFN1WRCR5',
+      'x-algolia-api-key': `${process.env.ALGOLIA_API_KEY}`,
+      'x-algolia-application-id': `${process.env.ALGOLIA_APP_ID}`,
     };
 
     const algoliaPayload: Record<string, any> = {
