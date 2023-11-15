@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -70,10 +70,16 @@ contract SwapToken {
         uint256[] memory _ownerTokenIds,
         address[] memory _targetAccountTokens,
         uint256[] memory _targetAccountTokenIds
-    ) public {
+    ) public returns (uint256){
+        // should validate all the tokens if the owner has approved the contract to transfer
+        // should validate all the tokens if the target has approved the contract to transfer
+        // should validate if the owner has the token
+        
         // checks lenghts
-        require(_ownerTokens.length == _ownerTokenIds.length, "!length");
-        require(_ownerTokens.length != 0, "length");
+        require(_ownerTokens.length == _ownerTokenIds.length, "_ownerTokens should be equal to _ownerTokenIds");
+        require(_ownerTokens.length != 0, "_ownerTokens should not be empty");
+        require(_targetAccountTokens.length == _targetAccountTokenIds.length, "_targetAccountTokens should be equal to _targetAccountTokenIds");
+        require(_targetAccountTokens.length != 0, "_targetAccountTokens should not be empty");
 
         // create swap
         uint256 swapId = swapCount;
@@ -96,6 +102,7 @@ contract SwapToken {
         userSwapCount[msg.sender]++;
 
         emit SwapCreated(swapId, msg.sender, _ownerTokens, _ownerTokenIds, targetAddress, _targetAccountTokens, _targetAccountTokenIds);
+        return swapId;
     }
 
     function cancelOffer(uint256 _swapId)

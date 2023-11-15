@@ -9,7 +9,7 @@ dotenv.config();
 async function main() {
   const rpcUrl = process.env.RPC_URL;
   if (!rpcUrl) throw new Error("Invalid RPC URL");
-  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string, provider);
   console.log("Deploying contracts with EOA: ", signer.address);
 

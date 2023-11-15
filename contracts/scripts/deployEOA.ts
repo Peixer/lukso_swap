@@ -7,7 +7,7 @@ dotenv.config();
 async function main() {  
   const rpcUrl = process.env.RPC_URL;
     if (!rpcUrl) throw new Error("Invalid RPC URL");
-    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const provider = new ethers.JsonRpcProvider(rpcUrl);
     const lastBlock = await provider.getBlock("latest");
     console.log(`The latest block number is \n`);
     console.log({lastBlock});
@@ -21,7 +21,7 @@ async function main() {
 
     const nftFactory = new SwapToken__factory(deployer);
     const nftContract = await nftFactory.deploy();
-    const nftContractAddress = await nftContract.address;
+    const nftContractAddress = await nftContract.getAddress();
     console.log(`The NFT contract address is ${nftContractAddress}`);
 }
 
