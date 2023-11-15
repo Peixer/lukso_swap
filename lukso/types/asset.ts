@@ -15,7 +15,7 @@ export type Metadata = {
   description: string;
   links: LinkJson[];
   icon: ImageJson[];
-  images: ImageJson[];
+  images: ImageJson[][];
   assets: {
     hashFunction: string;
     hash: string;

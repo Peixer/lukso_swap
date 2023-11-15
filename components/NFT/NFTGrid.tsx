@@ -1,15 +1,13 @@
-import type { NFT as NFTType } from "@thirdweb-dev/sdk";
-import Link from "next/link";
-import React from "react";
-import { NFT_COLLECTION_ADDRESS } from "../../const/contractAddresses";
+import React, { useState } from "react";
 import Skeleton from "../Skeleton/Skeleton";
 import NFT from "./NFT";
-import styles from "../../styles/Buy.module.css";
+import styles from "../../styles/Create.module.css";
+import { Asset } from "../../lukso/types/asset";
 
 type Props = {
   isLoading: boolean;
-  data: NFTType[] | undefined;
-  overrideOnclickBehavior?: (nft: NFTType) => void;
+  data: Asset[] | undefined;
+  overrideOnclickBehavior?: (nft: Asset) => void;
   emptyText?: string;
 };
 
@@ -17,8 +15,21 @@ export default function NFTGrid({
   isLoading,
   data,
   overrideOnclickBehavior,
-  emptyText = "No NFTs found for this collection.",
+  emptyText = "No NFTs found for this address.",
 }: Props) {
+  const [selectedNFTs, setSelectedNFTs] = useState<string[]>([]);
+
+  const handleNFTClick = (contractAddress: string) => {
+    // Toggle selection
+    if (selectedNFTs.includes(contractAddress)) {
+      setSelectedNFTs((prevSelected) =>
+        prevSelected.filter((address) => address !== contractAddress)
+      );
+    } else {
+      setSelectedNFTs((prevSelected) => [...prevSelected, contractAddress]);
+    }
+  };
+
   return (
     <div className={styles.nftGridContainer}>
       {isLoading ? (
@@ -28,25 +39,24 @@ export default function NFTGrid({
           </div>
         ))
       ) : data && data.length > 0 ? (
-        data.map((nft) =>
-          !overrideOnclickBehavior ? (
-            <Link
-              href={`/token/${NFT_COLLECTION_ADDRESS}/${nft.metadata.id}`}
-              key={nft.metadata.id}
-              className={styles.nftContainer}
-            >
-              <NFT nft={nft} />
-            </Link>
-          ) : (
-            <div
-              key={nft.metadata.id}
-              className={styles.nftContainer}
-              onClick={() => overrideOnclickBehavior(nft)}
-            >
-              <NFT nft={nft} />
-            </div>
-          )
-        )
+        data.map((nft) => (
+          <div
+            key={nft.contractAddress}
+            className={`${styles.nftContainer} ${
+              selectedNFTs.includes(nft.contractAddress)
+                ? styles.nftSelected
+                : ""
+            }`}
+            onClick={() => {
+              handleNFTClick(nft.contractAddress);
+              if (overrideOnclickBehavior) {
+                overrideOnclickBehavior(nft);
+              }
+            }}
+          >
+            <NFT nft={nft} />
+          </div>
+        ))
       ) : (
         <p>{emptyText}</p>
       )}
