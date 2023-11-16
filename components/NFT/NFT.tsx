@@ -1,81 +1,52 @@
-import {
-  ThirdwebNftMedia,
-  useContract,
-  useValidDirectListings,
-  useValidEnglishAuctions,
-} from "@thirdweb-dev/react";
-import { NFT } from "@thirdweb-dev/sdk";
-import React from "react";
-import {
-  MARKETPLACE_ADDRESS,
-  NFT_COLLECTION_ADDRESS,
-} from "../../const/contractAddresses";
-import Skeleton from "../Skeleton/Skeleton";
+import React, { useEffect, useState } from "react";
+import Image from 'next/image';
 import styles from "./NFT.module.css";
+import { Asset } from "../../lukso/types/asset";
+import { NETWORKS } from "../../util/config";
 
 type Props = {
-  nft: NFT;
+  nft: Asset;
 };
 
 export default function NFTComponent({ nft }: Props) {
-  const { contract: marketplace, isLoading: loadingContract } = useContract(
-    MARKETPLACE_ADDRESS,
-    "marketplace-v3"
-  );
 
-  // 1. Load if the NFT is for direct listing
-  const { data: directListing, isLoading: loadingDirect } =
-    useValidDirectListings(marketplace, {
-      tokenContract: NFT_COLLECTION_ADDRESS,
-      tokenId: nft.metadata.id,
-    });
-
-  // 2. Load if the NFT is for auction
-  const { data: auctionListing, isLoading: loadingAuction } =
-    useValidEnglishAuctions(marketplace, {
-      tokenContract: NFT_COLLECTION_ADDRESS,
-      tokenId: nft.metadata.id,
-    });
+    // State to store the image and icon URLs
+    const [imageURL, setImageURL] = useState<string>('/nodata.png');
+    const [iconURL, setIconURL] = useState<string>('/nodata.png');
+  
+    useEffect(() => {
+      // Getting the ipfs gateway
+      const iconIpfsGateway = NETWORKS.l16.iconIpfs.url;
+      const imageIpfsGateway = NETWORKS.l16.imageIpfs.url;
+  
+      // Set the image URL
+      if (nft?.metadata?.images && nft?.metadata?.images[0]) {
+        const imageURL = nft.metadata.images[0][0].url;
+        setImageURL(`${imageIpfsGateway}${imageURL.slice(7)}`);
+      } 
+  
+      // Set the icon URL
+      if (nft?.metadata?.icon && nft?.metadata?.icon[0]) {
+        const iconURL = nft.metadata.icon[0].url;
+        setIconURL(`${iconIpfsGateway}${iconURL.slice(7)}`);
+      }
+    }, [nft]);
 
   return (
-    <>
-      <ThirdwebNftMedia metadata={nft.metadata} className={styles.nftImage} />
+    <div className={styles.nftImage}>
 
-      <p className={styles.nftTokenId}>Token ID #{nft.metadata.id}</p>
-      <p className={styles.nftName}>{nft.metadata.name}</p>
+      {/* Display the image using next/image component */}
+      {imageURL && (
+        <div>
+          <Image src={imageURL} alt="Asset Image" width={184} height={184} />
+        </div>
+      )}
 
-      <div className={styles.priceContainer}>
-        {loadingContract || loadingDirect || loadingAuction ? (
-          <Skeleton width="100%" height="100%" />
-        ) : directListing && directListing[0] ? (
-          <div className={styles.nftPriceContainer}>
-            <div>
-              <p className={styles.nftPriceLabel}>Price</p>
-              <p className={styles.nftPriceValue}>
-                {`${directListing[0]?.currencyValuePerToken.displayValue}
-          ${directListing[0]?.currencyValuePerToken.symbol}`}
-              </p>
-            </div>
-          </div>
-        ) : auctionListing && auctionListing[0] ? (
-          <div className={styles.nftPriceContainer}>
-            <div>
-              <p className={styles.nftPriceLabel}>Minimum Bid</p>
-              <p className={styles.nftPriceValue}>
-                {`${auctionListing[0]?.minimumBidCurrencyValue.displayValue}
-          ${auctionListing[0]?.minimumBidCurrencyValue.symbol}`}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className={styles.nftPriceContainer}>
-            <div>
-              <p className={styles.nftPriceLabel}>Price</p>
-              <p className={styles.nftPriceValue}>Not for sale</p>
-            </div>
-          </div>
-        )}
+      <div className={styles.dataContainer}>
+        <p className={styles.nftTokenId}>${nft.symbol}</p>
+        <p className={styles.nftName}>{nft.name}</p>
       </div>
-    </>
+
+    </div>
   );
 }

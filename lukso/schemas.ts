@@ -169,7 +169,7 @@ export const LSP10ReceivedVaultsSchema: ERC725JSONSchema[] = [
 ];
 
 // Parameters for the ERC725 instance
-const config = { ipfsGateway: NETWORKS.l16.ipfs.url };
+const config = { ipfsGateway: NETWORKS.l16.imageIpfs.url };
 const TESTNET_RPC_ENDPOINT = 'https://lukso-testnet.rpc.thirdweb.com';
 
 export function getInstance(

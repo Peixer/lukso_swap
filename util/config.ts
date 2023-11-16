@@ -14,8 +14,11 @@ export const NETWORKS: { [K in NetworkType]: NetworkInfo } = {
     cache: {
       url: 'https://erc725cache.l16.lukso.network/graphql',
     },
-    ipfs: {
+    iconIpfs: {
       url: 'https://2eff.lukso.dev/ipfs/',
+    },
+    imageIpfs: {
+      url: 'https://api.universalprofile.cloud/ipfs/',
     },
     blockscout: {
       url: 'https://explorer.execution.l16.lukso.network/tx',
