@@ -4,7 +4,7 @@
     "build": "hardhat compile --force --show-stack-traces",
     "test": "npx hardhat test",
     "compile": "npx hardhat compile",
-    "deploy": "yarn compile && npx hardhat run --network localhost scripts/deployEOA.ts"
+    "deploy": "yarn compile && npx hardhat run --network luksoTestnet scripts/deployEOA.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",

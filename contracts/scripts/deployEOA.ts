@@ -5,7 +5,7 @@ import { SwapToken__factory } from "../typechain-types";
 dotenv.config();
 
 async function main() {  
-  const rpcUrl = process.env.RPC_URL;
+  const rpcUrl = process.env.LUKSO_RPC_URL;
     if (!rpcUrl) throw new Error("Invalid RPC URL");
     const provider = new ethers.JsonRpcProvider(rpcUrl);
     const lastBlock = await provider.getBlock("latest");
