@@ -27,14 +27,6 @@ export function Navbar() {
                 LuksoSwap
             </span>
           </h2>
-          <div className={styles.navMiddle}>
-            <Link href="/buy" className={styles.link}>
-              Buy
-            </Link>
-            <Link href="/sell" className={styles.link}>
-              Sell
-            </Link>
-          </div>
         </div>
       </nav>
     </div>
