@@ -2,7 +2,9 @@
 import 'swiper/css';
 
 import styles from "./CarouselSlide.module.css";
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
+
+export const SlideWidth : number = 300;
 
 interface CarouselSlideProps {
     image1Src: string;
