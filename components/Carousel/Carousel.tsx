@@ -15,11 +15,21 @@ import { useEffect, useState } from 'react';
 
 const Carousel = () => {
 
-    const [slidesPerView, setSlidesPerView] = useState(window.innerWidth/SlideWidth);
+    const [slidesPerView, setSlidesPerView] = useState(calculateSlidesPerView());
+
+    function calculateSlidesPerView() {
+        // Check if window is defined (to avoid errors during SSR or testing)
+        if (typeof window !== 'undefined') {
+          return Math.floor(window.innerWidth / SlideWidth);
+        }
+    
+        // Default value or handling for non-browser environment
+        return 4;
+      }
 
     useEffect(() => {
       const handleResize = () => {
-        setSlidesPerView(Math.floor(window.innerWidth/SlideWidth));
+        setSlidesPerView(calculateSlidesPerView());
       };
   
       // Attach the event listener
