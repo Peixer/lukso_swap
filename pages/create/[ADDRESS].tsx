@@ -24,10 +24,15 @@ export default function Create(){
   useEffect(() => {
     if (router.query) {
       const { ADDRESS } = router.query;
-      setAddress(ADDRESS as string);
-      setTradeUserAddress(ADDRESS as string);
+
+      if(wallet && (wallet.accounts[0].address !== ADDRESS as string)){
+        setAddress(ADDRESS as string);
+        setTradeUserAddress(ADDRESS as string);
+      } else{
+        router.push('/');
+      }
     }
-  }, [router.query]);
+  }, [router, router.query, wallet]);
   
   // Load all of the NFTs from the given address
   const isLoading = false;
