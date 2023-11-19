@@ -5,7 +5,7 @@ import styles from "../../styles/NFTGrid.module.css";
 import { Asset } from "../../lukso/types/asset";
 
 type Props = {
-  data: Asset[] | undefined;
+  data: any;
   overrideOnclickBehavior?: (nft: Asset) => void;
   emptyText?: string;
   selectedNFTs?: Asset[];
@@ -15,7 +15,7 @@ export default function NFTGrid({
   data,
   overrideOnclickBehavior,
   emptyText = "No NFTs found for this address.",
-  selectedNFTs
+  selectedNFTs,
 }: Props) {
   return (
     <div className={styles.nftGridContainer}>
@@ -26,12 +26,16 @@ export default function NFTGrid({
           </div>
         ))
       ) : data && data.length > 0 ? (
-        data.map((nft) => {
-          const isSelected = selectedNFTs?.some((selectedNFT) => selectedNFT.contractAddress === nft.contractAddress);
+        data.map((nft: any) => {
+          const isSelected = selectedNFTs?.some(
+            (selectedNFT) => selectedNFT.contractAddress === nft.contractAddress
+          );
           return (
             <div
               key={nft.contractAddress}
-              className={`${styles.nftContainer} ${isSelected ? styles.nftSelected : ""}`}
+              className={`${styles.nftContainer} ${
+                isSelected ? styles.nftSelected : ""
+              }`}
               onClick={() => {
                 if (overrideOnclickBehavior) {
                   overrideOnclickBehavior(nft);

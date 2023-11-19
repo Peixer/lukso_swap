@@ -28,8 +28,7 @@ export default function Sell() {
           <p>Select which NFT you&rsquo;d like to sell below.</p>
           <NFTGrid
             data={data}
-            isLoading={isLoading}
-            overrideOnclickBehavior={(nft) => {
+            overrideOnclickBehavior={(nft: any) => {
               setSelectedNft(nft);
             }}
             emptyText={

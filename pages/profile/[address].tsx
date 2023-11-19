@@ -7,7 +7,7 @@ import {
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Container from "../../components/Container/Container";
-import ListingWrapper from "../../components/ListingWrapper/ListingWrapper";
+// import ListingWrapper from "../../components/ListingWrapper/ListingWrapper";
 import NFTGrid from "../../components/NFT/NFTGrid";
 import Skeleton from "../../components/Skeleton/Skeleton";
 import {
@@ -107,7 +107,6 @@ export default function ProfilePage() {
       >
         <NFTGrid
           data={ownedNfts}
-          isLoading={loadingOwnedNfts}
           emptyText="Looks like you don't have any NFTs from this collection. Head to the buy page to buy some!"
         />
       </div>
@@ -117,7 +116,7 @@ export default function ProfilePage() {
           tab === "listings" ? styles.activeTabContent : styles.tabContent
         }`}
       >
-        {loadingDirects ? (
+        {/* {loadingDirects ? (
           <p>Loading...</p>
         ) : directListings && directListings.length === 0 ? (
           <p>Nothing for sale yet! Head to the sell tab to list an NFT.</p>
@@ -125,7 +124,7 @@ export default function ProfilePage() {
           directListings?.map((listing) => (
             <ListingWrapper listing={listing} key={listing.id} />
           ))
-        )}
+        )} */}
       </div>
 
       <div
@@ -133,7 +132,7 @@ export default function ProfilePage() {
           tab === "auctions" ? styles.activeTabContent : styles.tabContent
         }`}
       >
-        {loadingAuctions ? (
+        {/* {loadingAuctions ? (
           <p>Loading...</p>
         ) : auctionListings && auctionListings.length === 0 ? (
           <p>Nothing for sale yet! Head to the sell tab to list an NFT.</p>
@@ -141,7 +140,7 @@ export default function ProfilePage() {
           auctionListings?.map((listing) => (
             <ListingWrapper listing={listing} key={listing.id} />
           ))
-        )}
+        )} */}
       </div>
     </Container>
   );
