@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getInstance, LSP4Schema, LSP8IdentifiableDigitalAssetSchema, UniversalProfileSchema } from './schemas';
 import { Asset, ASSET_STANDARD, Metadata } from './types/asset';
 
-// Fetch LSP7 and LSP8 assets from a user UP address 
+// Fetch LSP7 and LSP8 assets from a user UP address  
 export const useAssets = (profileAddress: string): [Asset[]] => {
   const [assets, setAssets] = useState<Asset[]>([]);
 
@@ -63,8 +63,6 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
                 resultValue.map(async (address: string) => await fetchAssetData(address))
                 )
             ).filter((asset) => asset !== false) as Asset[];
-    
-            console.log(filteredAssets);
     
             setAssets(filteredAssets);
         } catch (e) {

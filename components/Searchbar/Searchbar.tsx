@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, MouseEvent} from 'react';
 import { useRouter } from 'next/router';
 import styles from './Searchbar.module.css'; 
+import { useConnectWallet } from '@web3-onboard/react';
 
 export interface Suggestion{
     name: string;
@@ -17,6 +18,8 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions }) => {
     const router = useRouter();
 
+    const [{ wallet }] = useConnectWallet();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
   
@@ -28,11 +31,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions }) => {
     };
   
     const handleSuggestionClick = (e: MouseEvent, suggestion: Suggestion) => {
-      setSearchTerm(suggestion.address);
-      onSearch(suggestion.address);
-      setShowSuggestions(false);
-
-      router.push(`/create/${suggestion.address}`);
+      if(wallet && (wallet.accounts[0].address !== suggestion.address)){
+        setSearchTerm(suggestion.address);
+        onSearch(suggestion.address);
+        setShowSuggestions(false);
+  
+        router.push(`/create/${suggestion.address}`);
+      }
     };
 
   return (

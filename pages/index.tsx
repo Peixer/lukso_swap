@@ -56,7 +56,6 @@ const Home: NextPage = () => {
 
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [loading, setLoading] = useState(false); // Initialize loading state
-  const [profile] = useProfile();
 
   const loadingConnect = async () => {
     setLoading(true);
