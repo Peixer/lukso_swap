@@ -35,7 +35,6 @@ export default function Create(){
   }, [router, router.query, wallet]);
   
   // Load all of the NFTs from the given address
-  const isLoading = false;
   const [assets] = useAssets(address as string);
   const [deal, setDeal] = useState<DealUser[]>([]);
   const [step, setStep] = useState<number>(0);
@@ -70,6 +69,9 @@ export default function Create(){
     let dealUser = new DealUser(address, selectedNFTs);
 
     if(wallet){
+      if(step === 0){
+        router.push('/');
+      }
       if(step === 1){
         deal[1] = dealUser;
         setSelectedNFTs(deal[0].assets);
@@ -117,7 +119,6 @@ export default function Create(){
               <p className="mt-0">You can only select items on the same chain. Not all items are eligible.</p>
               <NFTGrid
                 data={assets}
-                isLoading={isLoading}
                 overrideOnclickBehavior={selectNFT}
                 emptyText={
                     "No NFTs found for this address."
@@ -138,7 +139,6 @@ export default function Create(){
                   <div className={styles.dealNftContainer}>
                     <NFTGrid
                       data={deal[1].assets}
-                      isLoading={isLoading}
                       emptyText={
                           "No NFTs found for this address."
                       }
@@ -153,7 +153,6 @@ export default function Create(){
                   <div className={styles.dealNftContainer}>
                     <NFTGrid
                       data={deal[0].assets}
-                      isLoading={isLoading}
                       emptyText={
                           "No NFTs found for this address."
                       }
@@ -165,7 +164,7 @@ export default function Create(){
         }
 
         <div className={styles.createNavbar}>
-            <button onClick={handleBack} disabled={step === 0} className={styles.navBackButton}>Back</button>
+            <button onClick={handleBack} className={styles.navBackButton}>Back</button>
             <button onClick={handleNext} disabled={selectedNFTs.length === 0} className={styles.navNextButton}>{step < 2 ? 'Next' : 'Create'}</button>
         </div>
     </Container>

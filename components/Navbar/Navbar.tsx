@@ -1,4 +1,4 @@
-import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Navbar.module.css";
@@ -27,6 +27,11 @@ export function Navbar() {
                 LuksoSwap
             </span>
           </h2>
+          <div className={styles.navMiddle}>
+            <Link href="/deals" className={styles.link}>
+              Deals
+            </Link>
+          </div>
         </div>
       </nav>
     </div>

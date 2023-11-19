@@ -1,0 +1,39 @@
+.dealContainer {
+    width: 50vw;
+    min-width: 300px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 10px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+  
+.dealState {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px;
+    border: 1px solid white;
+    border-radius: 5px;
+    width: 80px;
+    text-align: center;
+}
+
+.dealActionContainer {
+    display: flex;
+    gap: 5px;
+    border-top: 1px solid lightgray;
+    padding-top: 10px;
+    justify-content: flex-end;
+}
+
+.dealStatePending{
+    background: rgb(132, 73, 221);
+}
+
+.dealStateAccepted{
+    background: rgb(37, 154, 68);
+}
+
+.dealStateRejected{
+    background: rgb(55, 100, 213);
+}

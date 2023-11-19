@@ -5,7 +5,6 @@ import styles from "../../styles/NFTGrid.module.css";
 import { Asset } from "../../lukso/types/asset";
 
 type Props = {
-  isLoading: boolean;
   data: Asset[] | undefined;
   overrideOnclickBehavior?: (nft: Asset) => void;
   emptyText?: string;
@@ -13,7 +12,6 @@ type Props = {
 };
 
 export default function NFTGrid({
-  isLoading,
   data,
   overrideOnclickBehavior,
   emptyText = "No NFTs found for this address.",
@@ -21,7 +19,7 @@ export default function NFTGrid({
 }: Props) {
   return (
     <div className={styles.nftGridContainer}>
-      {isLoading ? (
+      {data === undefined ? (
         [...Array(20)].map((_, index) => (
           <div key={index} className={styles.nftContainer}>
             <Skeleton key={index} width={"100%"} height="312px" />
