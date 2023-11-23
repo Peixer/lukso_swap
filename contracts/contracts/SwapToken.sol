@@ -160,4 +160,8 @@ contract SwapToken {
         // emit event
         emit SwapAccepted(_swapId);
     }
+
+    function getSwaps(address _user) public view returns (Swap[] memory) {
+        return userSwaps[_user];
+    }
 }
