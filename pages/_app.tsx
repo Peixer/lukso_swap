@@ -2,16 +2,16 @@ import type { AppProps } from "next/app";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { Navbar } from "../components/Navbar/Navbar";
 import NextNProgress from "nextjs-progressbar";
-import { NETWORK } from "../const/contractAddresses";
 import "../styles/globals.css";
 import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import { Web3OnboardProvider, init } from "@web3-onboard/react";
-import injectedModule from '@web3-onboard/injected-wallets'
+import injectedModule from "@web3-onboard/injected-wallets";
 import luksoModule from "../lukso/luksoModule";
-import { ConnectModalOptions } from '@web3-onboard/core/dist/types';
-import LuksoSwapLogo from '../public/logo';
-import chains from '../const/chains';
+import { ConnectModalOptions } from "@web3-onboard/core/dist/types";
+import LuksoSwapLogo from "../public/logo";
+import chains from "../const/chains";
+import { LuksoTestnet } from "@thirdweb-dev/chains";
 
 const lukso = luksoModule();
 
@@ -31,7 +31,7 @@ const injected = injectedModule({
   displayUnavailable: ["Universal Profiles"],
 });
 
-const wallets = [injected]
+const wallets = [injected];
 
 const connect: ConnectModalOptions = {
   iDontHaveAWalletLink:
@@ -57,14 +57,14 @@ const web3Onboard = init({
   wallets,
   chains,
   appMetadata,
-  connect
+  connect,
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider
-      clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
-      activeChain={NETWORK}
+      clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
+      activeChain={LuksoTestnet}
     >
       <Web3OnboardProvider web3Onboard={web3Onboard}>
         <Head>
@@ -78,10 +78,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           height={3}
           showOnShallow={true}
         />
-
-        {/* Render the navigation menu above each component */}
         <Navbar />
-        {/* Render the actual component (page) */}
         <Component {...pageProps} />
         <ToastContainer />
       </Web3OnboardProvider>
