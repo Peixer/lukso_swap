@@ -27,15 +27,11 @@ export default function NFTGrid({
         ))
       ) : data && data.length > 0 ? (
         data.map((nft: any) => {
-          const isSelected = selectedNFTs?.some(
-            (selectedNFT) => selectedNFT.contractAddress === nft.contractAddress
-          );
+          const isSelected = selectedNFTs?.some((selectedNFT) => (selectedNFT.contractAddress === nft.contractAddress) && (selectedNFT.tokenId === nft.tokenId));
           return (
             <div
-              key={nft.contractAddress}
-              className={`${styles.nftContainer} ${
-                isSelected ? styles.nftSelected : ""
-              }`}
+              key={nft.contractAddress+nft.tokenId}
+              className={`${styles.nftContainer} ${isSelected ? styles.nftSelected : ""}`}
               onClick={() => {
                 if (overrideOnclickBehavior) {
                   overrideOnclickBehavior(nft);

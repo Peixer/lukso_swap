@@ -83,3 +83,22 @@
   padding-left: 8px;
   text-align: left;
 }
+
+.nftTokenInfo{
+  margin-left: 10px;
+  border: 1px solid white;
+  background: #3c3840;
+  border-radius: 10px;
+  padding: 0px 3px;
+}
+
+.nftStandard{
+  border: 1px solid white;
+  background: #3c3840;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  border-radius: 10px;
+  padding-left: 5px;
+  font-size: 12px;
+  width: 41px;
+}

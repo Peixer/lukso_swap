@@ -38,22 +38,30 @@ export class Asset {
 
   symbol: string;
 
+  tokenId: string;
+
   creators: string[];
 
   metadata: Metadata;
+
+  amount: number | undefined;
 
   constructor(contractAddress: string, 
               contractStandard?: ASSET_STANDARD,
               name?: string,
               symbol?: string,
+              tokenId?: string,
               creators?: string[],
-              metadata?: any) {
+              metadata?: any,
+              amount?: number) {
     this.contractAddress = contractAddress ?? '';
     this.contractStandard = contractStandard ?? undefined;
     this.name = name ?? '';
     this.symbol = symbol ?? '';
+    this.tokenId = tokenId ?? '';
     this.creators = creators ?? [];
     this.metadata = metadata ?? [];
+    this.amount = amount ?? undefined;
   }
 };
   
