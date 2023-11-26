@@ -43,7 +43,8 @@ export default function Create(){
   const selectNFT = (nft: Asset) => {
     // Check if the NFT is already selected based on contractAddress
     const isSelected = selectedNFTs.some(
-      (selectedNFT) => selectedNFT.contractAddress === nft.contractAddress
+      (selectedNFT) => (selectedNFT.contractAddress === nft.contractAddress) 
+                    && (selectedNFT.tokenId === nft.tokenId)
     );
   
     // Update the selectedNFTs list
@@ -54,7 +55,8 @@ export default function Create(){
       // NFT is already selected, remove it from the list
       setSelectedNFTs((prevSelectedNFTs) =>
         prevSelectedNFTs.filter(
-          (selectedNFT) => selectedNFT.contractAddress !== nft.contractAddress
+          (selectedNFT) => (selectedNFT.contractAddress !== nft.contractAddress)
+                        || ((selectedNFT.contractAddress === nft.contractAddress) && (selectedNFT.tokenId !== nft.tokenId))
         )
       );
     }

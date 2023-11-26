@@ -304,21 +304,22 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.3.1.tgz#d0fce5d07b0620caa282b5131c297bb60f9d87e6"
   integrity sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==
 
-"@erc725/erc725.js@^0.20.0":
-  version "0.20.1"
-  resolved "https://registry.yarnpkg.com/@erc725/erc725.js/-/erc725.js-0.20.1.tgz#0363fb2711ee5273549cdc2b4393fd9e83c35b16"
-  integrity sha512-gpauiUJUCFnhjjzc8mGf9nZApUJeHvc4yT/utTiKOi+vPxQxWwawo3+v1reHgDH1v4DxGx7IRe9oXXZuu/wyWA==
+"@erc725/erc725.js@^0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@erc725/erc725.js/-/erc725.js-0.21.0.tgz#f22fe216fd4fb2dae4dff9e75901c761abee7d46"
+  integrity sha512-T3u1FdKJ4hNVIyOkk5siBVagvXDMrlRDTvuASbrXeGI9y8clTwxTDqkQEP6PddA1cqPGzO5i3l2TRS3tKD4VlQ==
   dependencies:
     ethereumjs-util "^7.1.5"
     web3-eth-abi "^1.10.0"
     web3-providers-http "^1.10.0"
     web3-utils "^1.10.0"
 
-"@erc725/erc725.js@^0.21.0":
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/@erc725/erc725.js/-/erc725.js-0.21.0.tgz#f22fe216fd4fb2dae4dff9e75901c761abee7d46"
-  integrity sha512-T3u1FdKJ4hNVIyOkk5siBVagvXDMrlRDTvuASbrXeGI9y8clTwxTDqkQEP6PddA1cqPGzO5i3l2TRS3tKD4VlQ==
+"@erc725/erc725.js@^0.21.2":
+  version "0.21.2"
+  resolved "https://registry.yarnpkg.com/@erc725/erc725.js/-/erc725.js-0.21.2.tgz#89bf98f69d0ae4e708d55be721d2a043c07eb26b"
+  integrity sha512-gIUEHKEfsndqzFJKqxZeXQNw7J9+FT85waPzzL2VlxEO3dSv1zyUydLgNrI/yvUTvGOn92d/CymtMbWelNyU5g==
   dependencies:
+    add "^2.0.6"
     ethereumjs-util "^7.1.5"
     web3-eth-abi "^1.10.0"
     web3-providers-http "^1.10.0"
@@ -1488,10 +1489,21 @@
     ipfs-utils "8.1.6"
     rxjs "^7.8.0"
 
-"@lukso/lsp-smart-contracts@^0.12.0", "@lukso/lsp-smart-contracts@^0.12.0-rc.0":
+"@lukso/lsp-smart-contracts@^0.12.0":
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/@lukso/lsp-smart-contracts/-/lsp-smart-contracts-0.12.0.tgz#6a01467e0d9ec2401c077770d65b59b80f12e1d3"
   integrity sha512-isF4Ts5VScJqZJkTxNc4T9U60jbVGj6OCxfXijXUGP+ZsOFHuWf9EOFRljA+m5yeVa47XC7vZPuMptMUQS/FNA==
+  dependencies:
+    "@account-abstraction/contracts" "^0.6.0"
+    "@erc725/smart-contracts" "^6.0.0"
+    "@openzeppelin/contracts" "^4.9.2"
+    "@openzeppelin/contracts-upgradeable" "^4.9.2"
+    solidity-bytes-utils "0.8.0"
+
+"@lukso/lsp-smart-contracts@^0.12.1":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@lukso/lsp-smart-contracts/-/lsp-smart-contracts-0.12.1.tgz#1a0be9c95db8b997afe1496ec711669c4982de0e"
+  integrity sha512-Hj2202qv5iewgsSfZzamJgUp0QXLGwz/pjfSXQrgwqSZbT54guQ3RWp0rDJS/HfwvVn8Nmu7qZETKsJv7LvnSg==
   dependencies:
     "@account-abstraction/contracts" "^0.6.0"
     "@erc725/smart-contracts" "^6.0.0"
@@ -3469,6 +3481,11 @@ acorn@^8.9.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.11.2.tgz#ca0d78b51895be5390a5903c5b3bdcdaf78ae40b"
   integrity sha512-nc0Axzp/0FILLEVsm4fNwLCwMttvhEI263QtVPQcbpfZZ3ts0hLsZGOpE6czNlid7CJ9MlyH8reXkpsf3YUY4w==
 
+add@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
+  integrity sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==
+
 aes-js@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-3.0.0.tgz#e21df10ad6c2053295bcbb8dab40b09dbea87e4d"
@@ -3848,7 +3865,7 @@ bignumber.js@7.2.1:
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
   integrity sha512-S4XzBk5sMB+Rcb/LNcpzXr57VRTxgAvaAEDAl1AwRx27j00hT84O6OkteE7u8UB3NuaaygCRrEpqox4uDOrbdQ==
 
-bignumber.js@^9.0.0, bignumber.js@^9.0.1, bignumber.js@^9.1.0:
+bignumber.js@^9.0.0, bignumber.js@^9.0.1, bignumber.js@^9.1.0, bignumber.js@^9.1.2:
   version "9.1.2"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.2.tgz#b7c4242259c008903b13707983b5f4bbd31eda0c"
   integrity sha512-2/mKyZH9K85bzOEfhXDBFZTGd1CTs+5IHpeFQo9luiBG7hghdC851Pj2WAhb6E3R6b9tZj/XKhbg4fum+Kepug==
