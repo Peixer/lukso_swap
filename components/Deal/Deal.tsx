@@ -27,6 +27,41 @@ export default function DealComponent({ deal }: Props) {
     }
   };
 
+  const checkAuthorizeOperator = async (
+    token: any,
+    tokenId: any,
+    provider: any
+  ) => {
+    const myToken = new ethers.Contract(
+      token,
+      LSP8Mintable.abi,
+      provider
+    );
+    const isOperatorFor = await myToken.functions.isOperatorFor(
+      wallet!.accounts[0].address,
+      tokenId
+    );
+    if (!isOperatorFor) {
+      const encodedDataApprove = myToken.interface.encodeFunctionData(
+        "authorizeOperator",
+        [contractAddress, tokenId, "0x"]
+      );
+
+      const hash: any = await wallet!.provider.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: wallet!.accounts[0].address,
+            to: token,
+            data: encodedDataApprove,
+          },
+        ],
+      });
+
+      await provider.waitForTransaction(hash);
+    }
+  };
+
   async function acceptOffer(deal: Deal) {
     const provider = new ethers.providers.JsonRpcProvider(
       process.env.NEXT_PUBLIC_LUKSO_RPC_URL
@@ -38,28 +73,7 @@ export default function DealComponent({ deal }: Props) {
     );
 
     for (let i = 0; i < targetTokenIds.length; i++) {
-      const myToken = new ethers.Contract(
-        targetTokens[i],
-        LSP8Mintable.abi,
-        provider
-      );
-      const encodedDataApprove = myToken.interface.encodeFunctionData(
-        "authorizeOperator",
-        [contractAddress, targetTokenIds[i], "0x"]
-      );
-
-      const hash: any = await wallet!.provider.request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            from: wallet!.accounts[0].address,
-            to: targetTokens[i],
-            data: encodedDataApprove,
-          },
-        ],
-      });
-
-      await provider.waitForTransaction(hash);
+      await checkAuthorizeOperator(targetTokens[i], targetTokenIds[i], provider);
     }
 
     const contract = new ethers.Contract(

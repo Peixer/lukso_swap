@@ -90,6 +90,37 @@ export default function Create() {
     setStep(step - 1);
   };
 
+  const checkAuthorizeOperator = async (
+    token: any,
+    tokenId: any,
+    provider: any
+  ) => {
+    const myToken = new ethers.Contract(token, LSP8Mintable.abi, provider);
+
+    const isOperatorFor = await myToken.functions.isOperatorFor(
+      wallet!.accounts[0].address,
+      tokenId
+    );
+    if (!isOperatorFor) {
+      const encodedDataApprove = myToken.interface.encodeFunctionData(
+        "authorizeOperator",
+        [contractAddress, tokenId, "0x"]
+      );
+
+      const hash: any = await wallet!.provider.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: wallet!.accounts[0].address,
+            to: token,
+            data: encodedDataApprove,
+          },
+        ],
+      });
+      await provider.waitForTransaction(hash);
+    }
+  };
+
   const handleNext = async () => {
     let dealUser = new DealUser(address, selectedNFTs);
 
@@ -125,28 +156,11 @@ export default function Create() {
         );
 
         for (let i = 0; i < ownerTokenIds.length; i++) {
-          // Instanciate the token with an address
-          const myToken = new ethers.Contract(
+          await checkAuthorizeOperator(
             ownerTokens[i],
-            LSP8Mintable.abi,
+            ownerTokenIds[i],
             provider
           );
-          const encodedDataApprove = myToken.interface.encodeFunctionData(
-            "authorizeOperator",
-            [contractAddress, ownerTokenIds[i], "0x"]
-          );
-
-          const hash: any = await wallet.provider.request({
-            method: "eth_sendTransaction",
-            params: [
-              {
-                from: wallet.accounts[0].address,
-                to: ownerTokens[i],
-                data: encodedDataApprove,
-              },
-            ],
-          });
-          await provider.waitForTransaction(hash);
         }
 
         const encodedData = contract.interface.encodeFunctionData(
