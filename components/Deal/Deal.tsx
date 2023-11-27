@@ -38,10 +38,11 @@ export default function DealComponent({ deal }: Props) {
       provider
     );
     const isOperatorFor = await myToken.functions.isOperatorFor(
-      wallet!.accounts[0].address,
+      contractAddress,
       tokenId
     );
-    if (!isOperatorFor) {
+    debugger;
+    if (!isOperatorFor[0]) {
       const encodedDataApprove = myToken.interface.encodeFunctionData(
         "authorizeOperator",
         [contractAddress, tokenId, "0x"]

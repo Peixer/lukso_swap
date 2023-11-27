@@ -98,10 +98,10 @@ export default function Create() {
     const myToken = new ethers.Contract(token, LSP8Mintable.abi, provider);
 
     const isOperatorFor = await myToken.functions.isOperatorFor(
-      wallet!.accounts[0].address,
+      contractAddress,
       tokenId
     );
-    if (!isOperatorFor) {
+    if (!isOperatorFor[0]) {
       const encodedDataApprove = myToken.interface.encodeFunctionData(
         "authorizeOperator",
         [contractAddress, tokenId, "0x"]
