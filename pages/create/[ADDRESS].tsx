@@ -9,8 +9,7 @@ import styles from "./Create.module.css";
 import { useConnectWallet } from "@web3-onboard/react";
 import { DealUser } from "../../lukso/types/deal";
 import { useProfile } from "../../lukso/fetchProfile";
-import { useContract, useContractWrite } from "@thirdweb-dev/react";
-import { Lukso } from "@thirdweb-dev/chains";
+import { ethers } from "ethers";
 
 export default function Create() {
   // Get wallet
@@ -22,12 +21,9 @@ export default function Create() {
   const [user] = useProfile(wallet?.accounts[0].address as string);
   const [tradeUserAddress, setTradeUserAddress] = useState<string>("");
   const [tradeUser] = useProfile(tradeUserAddress);
-  const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
-  const {
-    mutateAsync: createSwapAsync,
-    isLoading,
-    error,
-  } = useContractWrite(contract, "createSwap");
+
+  const contractABI = require("../../contract-abi.json");
+  const contractAddress = "0x9A3eD23d58F73881c39B860Da75969e709A68cF7";
 
   useEffect(() => {
     if (router.query) {
@@ -51,8 +47,9 @@ export default function Create() {
   const selectNFT = (nft: Asset) => {
     // Check if the NFT is already selected based on contractAddress
     const isSelected = selectedNFTs.some(
-      (selectedNFT) => (selectedNFT.contractAddress === nft.contractAddress) 
-                    && (selectedNFT.tokenId === nft.tokenId)
+      (selectedNFT) =>
+        selectedNFT.contractAddress === nft.contractAddress &&
+        selectedNFT.tokenId === nft.tokenId
     );
 
     // Update the selectedNFTs list
@@ -63,8 +60,10 @@ export default function Create() {
       // NFT is already selected, remove it from the list
       setSelectedNFTs((prevSelectedNFTs) =>
         prevSelectedNFTs.filter(
-          (selectedNFT) => (selectedNFT.contractAddress !== nft.contractAddress)
-                        || ((selectedNFT.contractAddress === nft.contractAddress) && (selectedNFT.tokenId !== nft.tokenId))
+          (selectedNFT) =>
+            selectedNFT.contractAddress !== nft.contractAddress ||
+            (selectedNFT.contractAddress === nft.contractAddress &&
+              selectedNFT.tokenId !== nft.tokenId)
         )
       );
     }
@@ -110,19 +109,37 @@ export default function Create() {
       }
 
       if (step === 2) {
-        debugger;
-        await createSwapAsync({
-          args: [
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+        );
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI.abi,
+          provider
+        );
+
+        const encodedData = contract.interface.encodeFunctionData(
+          "createSwap",
+          [
             "Swap",
             deal[0].address,
             deal[0].assets.map((asset) => asset.contractAddress),
-            [1],
-            // deal[0].assets.map((asset) => asset.contractAddress),
+            deal[0].assets.map((asset) => asset.tokenId),
             deal[1].assets.map((asset) => asset.contractAddress),
-            // deal[1].assets.map((asset) => asset.tokenId),
-            [2],
+            deal[1].assets.map((asset) => asset.tokenId),
+          ]
+        );
+        await wallet.provider.request({
+          method: "eth_sendTransaction",
+          params: [
+            {
+              from: wallet.accounts[0].address,
+              to: contractAddress,
+              data: encodedData,
+            },
           ],
         });
+
         router.push("/");
       }
     }
