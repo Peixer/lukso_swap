@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/ILSP8IdentifiableDigitalAsset.sol";
+import "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8Mintable.sol";
 
 contract SwapToken {
     struct Swap {
@@ -24,14 +24,7 @@ contract SwapToken {
     mapping(address => Swap[]) public userSwaps; 
     mapping(address => uint256) public userSwapCount;
 
-    event SwapCreated(
-        uint256 swapId,
-        address owner,
-        address[] ownerTokens,
-        bytes32[] ownerTokenIds,
-        address target,
-        address[] targetAccountTokens,
-        bytes32[] targetAccountTokenIds);
+    event SwapCreated(uint256 swapId, address owner);
     event SwapCancelled(uint256 swapId);
     event SwapAccepted(uint256 swapId);
 
@@ -102,7 +95,7 @@ contract SwapToken {
         swapCount++;
         userSwapCount[msg.sender]++;
 
-        emit SwapCreated(swapId, msg.sender, _ownerTokens, _ownerTokenIds, targetAddress, _targetAccountTokens, _targetAccountTokenIds);
+        emit SwapCreated(swapId, msg.sender);
         return swapId;
     }
 
@@ -135,12 +128,12 @@ contract SwapToken {
         address[] memory swapTokens = swaps[_swapId].targetAccountTokens;
         bytes32[] memory swapTokenIds = swaps[_swapId].targetAccountTokenIds;
         for (uint256 i = 0; i < swapTokens.length; i++) {
-            ILSP8IdentifiableDigitalAsset(swapTokens[i]).transfer(
+            LSP8Mintable(payable(swapTokens[i])).transfer(
                 target,
                 owner,
                 swapTokenIds[i],
                 true,
-                ""
+                '0x'
             );
         }
 
@@ -149,12 +142,12 @@ contract SwapToken {
         bytes32[] memory offerTokenIds = swaps[_swapId].ownerTokenIds;
         if (offerTokens.length != 0) {
             for (uint256 i = 0; i < offerTokens.length; i++) {
-                ILSP8IdentifiableDigitalAsset(offerTokens[i]).transfer(
+                LSP8Mintable(payable(offerTokens[i])).transfer(
                     owner,
                     target,
                     offerTokenIds[i],
                     true,
-                    ""
+                    '0x'
                 );
             }
         }
