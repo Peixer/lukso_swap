@@ -21,7 +21,7 @@ contract SwapToken {
 
     uint256 public swapCount;
     mapping(uint256 => Swap) public swaps;
-    mapping(address => Swap[]) public userSwaps; 
+    mapping(address => uint256[]) public userSwaps; 
     mapping(address => uint256) public userSwapCount;
 
     event SwapCreated(uint256 swapId, address owner);
@@ -91,9 +91,9 @@ contract SwapToken {
 
         // populate mappings/arrays
         swaps[swapId] = swap_;
-        userSwaps[msg.sender].push(swap_);
+        userSwaps[targetAddress].push(swapId);
         swapCount++;
-        userSwapCount[msg.sender]++;
+        userSwapCount[targetAddress]++;
 
         emit SwapCreated(swapId, msg.sender);
         return swapId;
@@ -160,6 +160,10 @@ contract SwapToken {
     }
 
     function getSwaps(address _user) public view returns (Swap[] memory) {
-        return userSwaps[_user];
+        Swap[] memory _swaps = new Swap[](userSwapCount[_user]);
+        for (uint256 i = 0; i < userSwapCount[_user]; i++) {
+            _swaps[i] = swaps[userSwaps[_user][i]];
+        }   
+        return _swaps;
     }
 }
