@@ -10,6 +10,7 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { DealUser } from "../../lukso/types/deal";
 import { useProfile } from "../../lukso/fetchProfile";
 import { ethers } from "ethers";
+import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
 
 export default function Create() {
   // Get wallet
@@ -23,7 +24,7 @@ export default function Create() {
   const [tradeUser] = useProfile(tradeUserAddress);
 
   const contractABI = require("../../contract-abi.json");
-  const contractAddress = "0x9A3eD23d58F73881c39B860Da75969e709A68cF7";
+  const contractAddress = "0x581ad93A9FEA22c81e763Be8b3bE88bb7793ce4B";
 
   useEffect(() => {
     if (router.query) {
@@ -118,17 +119,48 @@ export default function Create() {
           provider
         );
 
+        const ownerTokenIds = deal[1].assets.map((asset) => asset.tokenId);
+        const ownerTokens = deal[1].assets.map(
+          (asset) => asset.contractAddress
+        );
+
+        for (let i = 0; i < ownerTokenIds.length; i++) {
+          // Instanciate the token with an address
+          const myToken = new ethers.Contract(
+            ownerTokens[i],
+            LSP8Mintable.abi,
+            provider
+          );
+          const encodedDataApprove = myToken.interface.encodeFunctionData(
+            "authorizeOperator",
+            [contractAddress, ownerTokenIds[i], "0x"]
+          );
+
+          const hash: any = await wallet.provider.request({
+            method: "eth_sendTransaction",
+            params: [
+              {
+                from: wallet.accounts[0].address,
+                to: ownerTokens[i],
+                data: encodedDataApprove,
+              },
+            ],
+          });
+          await provider.waitForTransaction(hash);
+        }
+
         const encodedData = contract.interface.encodeFunctionData(
           "createSwap",
           [
             "Swap",
             deal[0].address,
+            ownerTokens,
+            ownerTokenIds,
             deal[0].assets.map((asset) => asset.contractAddress),
             deal[0].assets.map((asset) => asset.tokenId),
-            deal[1].assets.map((asset) => asset.contractAddress),
-            deal[1].assets.map((asset) => asset.tokenId),
           ]
         );
+
         await wallet.provider.request({
           method: "eth_sendTransaction",
           params: [
