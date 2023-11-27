@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8Mintable.sol";
 
 contract SwapToken {
     struct Swap {
@@ -12,25 +13,18 @@ contract SwapToken {
         address owner;
         address target;
         address[] ownerTokens;
-        uint256[] ownerTokenIds;
+        bytes32[] ownerTokenIds;
         address[] targetAccountTokens;
-        uint256[] targetAccountTokenIds;
+        bytes32[] targetAccountTokenIds;
         uint256 swapId;
     }
 
     uint256 public swapCount;
     mapping(uint256 => Swap) public swaps;
-    mapping(address => Swap[]) public userSwaps; 
+    mapping(address => uint256[]) public userSwaps; 
     mapping(address => uint256) public userSwapCount;
 
-    event SwapCreated(
-        uint256 swapId,
-        address owner,
-        address[] ownerTokens,
-        uint256[] ownerTokenIds,
-        address target,
-        address[] targetAccountTokens,
-        uint256[] targetAccountTokenIds);
+    event SwapCreated(uint256 swapId, address owner);
     event SwapCancelled(uint256 swapId);
     event SwapAccepted(uint256 swapId);
 
@@ -67,9 +61,9 @@ contract SwapToken {
         string memory _description,
         address targetAddress,
         address[] memory _ownerTokens,
-        uint256[] memory _ownerTokenIds,
+        bytes32[] memory _ownerTokenIds,
         address[] memory _targetAccountTokens,
-        uint256[] memory _targetAccountTokenIds
+        bytes32[] memory _targetAccountTokenIds
     ) public returns (uint256){
         // should validate all the tokens if the owner has approved the contract to transfer
         // should validate all the tokens if the target has approved the contract to transfer
@@ -97,11 +91,11 @@ contract SwapToken {
 
         // populate mappings/arrays
         swaps[swapId] = swap_;
-        userSwaps[msg.sender].push(swap_);
+        userSwaps[targetAddress].push(swapId);
         swapCount++;
-        userSwapCount[msg.sender]++;
+        userSwapCount[targetAddress]++;
 
-        emit SwapCreated(swapId, msg.sender, _ownerTokens, _ownerTokenIds, targetAddress, _targetAccountTokens, _targetAccountTokenIds);
+        emit SwapCreated(swapId, msg.sender);
         return swapId;
     }
 
@@ -132,24 +126,28 @@ contract SwapToken {
 
         // swap seller token
         address[] memory swapTokens = swaps[_swapId].targetAccountTokens;
-        uint256[] memory swapTokenIds = swaps[_swapId].targetAccountTokenIds;
+        bytes32[] memory swapTokenIds = swaps[_swapId].targetAccountTokenIds;
         for (uint256 i = 0; i < swapTokens.length; i++) {
-            IERC721(swapTokens[i]).safeTransferFrom(
+            LSP8Mintable(payable(swapTokens[i])).transfer(
                 target,
                 owner,
-                swapTokenIds[i]
+                swapTokenIds[i],
+                true,
+                '0x'
             );
         }
 
         // swap buyer token
         address[] memory offerTokens = swaps[_swapId].ownerTokens;
-        uint256[] memory offerTokenIds = swaps[_swapId].ownerTokenIds;
+        bytes32[] memory offerTokenIds = swaps[_swapId].ownerTokenIds;
         if (offerTokens.length != 0) {
             for (uint256 i = 0; i < offerTokens.length; i++) {
-                IERC721(offerTokens[i]).safeTransferFrom(
+                LSP8Mintable(payable(offerTokens[i])).transfer(
                     owner,
                     target,
-                    offerTokenIds[i]
+                    offerTokenIds[i],
+                    true,
+                    '0x'
                 );
             }
         }
@@ -162,6 +160,10 @@ contract SwapToken {
     }
 
     function getSwaps(address _user) public view returns (Swap[] memory) {
-        return userSwaps[_user];
+        Swap[] memory _swaps = new Swap[](userSwapCount[_user]);
+        for (uint256 i = 0; i < userSwapCount[_user]; i++) {
+            _swaps[i] = swaps[userSwaps[_user][i]];
+        }   
+        return _swaps;
     }
 }

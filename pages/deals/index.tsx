@@ -11,6 +11,7 @@ import {
 import DealComponent from "../../components/Deal/Deal";
 import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { useConnectWallet } from "@web3-onboard/react";
+import { Asset } from "../../lukso/types/asset";
 
 export default function Deals() {
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -28,11 +29,23 @@ export default function Deals() {
     if (!wallet) return;
     if (data) {
       let deals = data.map((deal: any) => {
+        const assetsTarget = deal.targetAccountTokenIds.map((tokenId: any, index: any) => {
+          return {
+            contractAddress: deal.targetAccountTokens[index],
+            tokenId: tokenId,
+          } as Asset;
+        })
+        const assetsOwner = deal.ownerTokenIds.map((tokenId: any, index: any) => {
+          return {
+            contractAddress: deal.ownerTokens[index],
+            tokenId: tokenId,
+          } as Asset;
+        })
         return new Deal(
           deal.swapId,
           [
-            new DealUser(deal.owner, deal.ownerTokens, deal.owner),
-            new DealUser(deal.target, deal.targetAccountTokens, deal.target),
+            new DealUser(deal.owner, assetsOwner, deal.owner),
+            new DealUser(deal.target, assetsTarget, deal.target),
           ],
           getEnumState(deal.status),
           new Date()

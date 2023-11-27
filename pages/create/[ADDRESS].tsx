@@ -9,8 +9,8 @@ import styles from "./Create.module.css";
 import { useConnectWallet } from "@web3-onboard/react";
 import { DealUser } from "../../lukso/types/deal";
 import { useProfile } from "../../lukso/fetchProfile";
-import { useContract, useContractWrite } from "@thirdweb-dev/react";
-import { Lukso } from "@thirdweb-dev/chains";
+import { ethers } from "ethers";
+import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
 
 export default function Create() {
   // Get wallet
@@ -22,12 +22,9 @@ export default function Create() {
   const [user] = useProfile(wallet?.accounts[0].address as string);
   const [tradeUserAddress, setTradeUserAddress] = useState<string>("");
   const [tradeUser] = useProfile(tradeUserAddress);
-  const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
-  const {
-    mutateAsync: createSwapAsync,
-    isLoading,
-    error,
-  } = useContractWrite(contract, "createSwap");
+
+  const contractABI = require("../../contract-abi.json");
+  const contractAddress = "0x581ad93A9FEA22c81e763Be8b3bE88bb7793ce4B";
 
   useEffect(() => {
     if (router.query) {
@@ -51,8 +48,9 @@ export default function Create() {
   const selectNFT = (nft: Asset) => {
     // Check if the NFT is already selected based on contractAddress
     const isSelected = selectedNFTs.some(
-      (selectedNFT) => (selectedNFT.contractAddress === nft.contractAddress) 
-                    && (selectedNFT.tokenId === nft.tokenId)
+      (selectedNFT) =>
+        selectedNFT.contractAddress === nft.contractAddress &&
+        selectedNFT.tokenId === nft.tokenId
     );
 
     // Update the selectedNFTs list
@@ -63,8 +61,10 @@ export default function Create() {
       // NFT is already selected, remove it from the list
       setSelectedNFTs((prevSelectedNFTs) =>
         prevSelectedNFTs.filter(
-          (selectedNFT) => (selectedNFT.contractAddress !== nft.contractAddress)
-                        || ((selectedNFT.contractAddress === nft.contractAddress) && (selectedNFT.tokenId !== nft.tokenId))
+          (selectedNFT) =>
+            selectedNFT.contractAddress !== nft.contractAddress ||
+            (selectedNFT.contractAddress === nft.contractAddress &&
+              selectedNFT.tokenId !== nft.tokenId)
         )
       );
     }
@@ -110,19 +110,68 @@ export default function Create() {
       }
 
       if (step === 2) {
-        debugger;
-        await createSwapAsync({
-          args: [
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+        );
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractABI.abi,
+          provider
+        );
+
+        const ownerTokenIds = deal[1].assets.map((asset) => asset.tokenId);
+        const ownerTokens = deal[1].assets.map(
+          (asset) => asset.contractAddress
+        );
+
+        for (let i = 0; i < ownerTokenIds.length; i++) {
+          // Instanciate the token with an address
+          const myToken = new ethers.Contract(
+            ownerTokens[i],
+            LSP8Mintable.abi,
+            provider
+          );
+          const encodedDataApprove = myToken.interface.encodeFunctionData(
+            "authorizeOperator",
+            [contractAddress, ownerTokenIds[i], "0x"]
+          );
+
+          const hash: any = await wallet.provider.request({
+            method: "eth_sendTransaction",
+            params: [
+              {
+                from: wallet.accounts[0].address,
+                to: ownerTokens[i],
+                data: encodedDataApprove,
+              },
+            ],
+          });
+          await provider.waitForTransaction(hash);
+        }
+
+        const encodedData = contract.interface.encodeFunctionData(
+          "createSwap",
+          [
             "Swap",
             deal[0].address,
+            ownerTokens,
+            ownerTokenIds,
             deal[0].assets.map((asset) => asset.contractAddress),
-            [1],
-            // deal[0].assets.map((asset) => asset.contractAddress),
-            deal[1].assets.map((asset) => asset.contractAddress),
-            // deal[1].assets.map((asset) => asset.tokenId),
-            [2],
+            deal[0].assets.map((asset) => asset.tokenId),
+          ]
+        );
+
+        await wallet.provider.request({
+          method: "eth_sendTransaction",
+          params: [
+            {
+              from: wallet.accounts[0].address,
+              to: contractAddress,
+              data: encodedData,
+            },
           ],
         });
+
         router.push("/");
       }
     }

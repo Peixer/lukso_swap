@@ -1,23 +1,18 @@
 import React from "react";
 import styles from "./Deal.module.css";
 import { DEAL_STATE, Deal } from "../../lukso/types/deal";
-import { Web3Button, useContract, useContractWrite } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
+import { useConnectWallet } from "@web3-onboard/react";
+import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
 
 type Props = {
   deal: Deal;
 };
 
 export default function DealComponent({ deal }: Props) {
-  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
-  const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
-  const { mutateAsync: acceptOfferAsync } = useContractWrite(
-    contract,
-    "acceptOffer"
-  );
-  const { mutateAsync: cancelOfferAsync } = useContractWrite(
-    contract,
-    "cancelOffer"
-  );
+  const [{ wallet }] = useConnectWallet();
+  const contractAddress = "0x581ad93A9FEA22c81e763Be8b3bE88bb7793ce4B"!;
+  const contractABI = require("../../contract-abi.json");
 
   const dealStateClass = (state: DEAL_STATE) => {
     switch (state) {
@@ -31,6 +26,86 @@ export default function DealComponent({ deal }: Props) {
         return styles.dealState; // Default class when state doesn't match any case
     }
   };
+
+  async function acceptOffer(deal: Deal) {
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+    );
+
+    const targetTokenIds = deal.users[1].assets.map((asset) => asset.tokenId);
+    const targetTokens = deal.users[1].assets.map(
+      (asset) => asset.contractAddress
+    );
+
+    for (let i = 0; i < targetTokenIds.length; i++) {
+      const myToken = new ethers.Contract(
+        targetTokens[i],
+        LSP8Mintable.abi,
+        provider
+      );
+      const encodedDataApprove = myToken.interface.encodeFunctionData(
+        "authorizeOperator",
+        [contractAddress, targetTokenIds[i], "0x"]
+      );
+
+      const hash: any = await wallet!.provider.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: wallet!.accounts[0].address,
+            to: targetTokens[i],
+            data: encodedDataApprove,
+          },
+        ],
+      });
+
+      await provider.waitForTransaction(hash);
+    }
+
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractABI.abi,
+      provider
+    );
+
+    const encodedData = contract.interface.encodeFunctionData("acceptOffer", [
+      parseInt(deal.id!),
+    ]);
+    await wallet!.provider.request({
+      method: "eth_sendTransaction",
+      params: [
+        {
+          from: wallet!.accounts[0].address,
+          to: contractAddress,
+          data: encodedData,
+        },
+      ],
+    });
+  }
+
+  async function rejectOffer(deal: Deal) {
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+    );
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractABI.abi,
+      provider
+    );
+    const encodedData = contract.interface.encodeFunctionData("cancelOffer", [
+      deal.id,
+    ]);
+    await wallet!.provider.request({
+      method: "eth_sendTransaction",
+      params: [
+        {
+          from: wallet!.accounts[0].address,
+          to: contractAddress,
+          data: encodedData,
+        },
+      ],
+    });
+  }
 
   return (
     <div className={styles.dealContainer}>
@@ -49,20 +124,8 @@ export default function DealComponent({ deal }: Props) {
       </div>
       {deal.state === DEAL_STATE.PENDING ? (
         <div className={styles.dealActionContainer}>
-          <Web3Button
-            className="w-full"
-            contractAddress={contractAddress}
-            action={() => acceptOfferAsync({ args: [deal.id] })}
-          >
-            Accept
-          </Web3Button>
-          <Web3Button
-            className="w-full"
-            contractAddress={contractAddress}
-            action={() => cancelOfferAsync({ args: [deal.id] })}
-          >
-            Reject
-          </Web3Button>
+          <button onClick={() => acceptOffer(deal)}>Accept</button>
+          <button onClick={() => rejectOffer(deal)}>Reject</button>
         </div>
       ) : (
         <></>
