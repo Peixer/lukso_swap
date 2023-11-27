@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/ILSP8IdentifiableDigitalAsset.sol";
 
 contract SwapToken {
     struct Swap {
@@ -12,9 +13,9 @@ contract SwapToken {
         address owner;
         address target;
         address[] ownerTokens;
-        uint256[] ownerTokenIds;
+        bytes32[] ownerTokenIds;
         address[] targetAccountTokens;
-        uint256[] targetAccountTokenIds;
+        bytes32[] targetAccountTokenIds;
         uint256 swapId;
     }
 
@@ -27,10 +28,10 @@ contract SwapToken {
         uint256 swapId,
         address owner,
         address[] ownerTokens,
-        uint256[] ownerTokenIds,
+        bytes32[] ownerTokenIds,
         address target,
         address[] targetAccountTokens,
-        uint256[] targetAccountTokenIds);
+        bytes32[] targetAccountTokenIds);
     event SwapCancelled(uint256 swapId);
     event SwapAccepted(uint256 swapId);
 
@@ -67,9 +68,9 @@ contract SwapToken {
         string memory _description,
         address targetAddress,
         address[] memory _ownerTokens,
-        uint256[] memory _ownerTokenIds,
+        bytes32[] memory _ownerTokenIds,
         address[] memory _targetAccountTokens,
-        uint256[] memory _targetAccountTokenIds
+        bytes32[] memory _targetAccountTokenIds
     ) public returns (uint256){
         // should validate all the tokens if the owner has approved the contract to transfer
         // should validate all the tokens if the target has approved the contract to transfer
@@ -132,24 +133,28 @@ contract SwapToken {
 
         // swap seller token
         address[] memory swapTokens = swaps[_swapId].targetAccountTokens;
-        uint256[] memory swapTokenIds = swaps[_swapId].targetAccountTokenIds;
+        bytes32[] memory swapTokenIds = swaps[_swapId].targetAccountTokenIds;
         for (uint256 i = 0; i < swapTokens.length; i++) {
-            IERC721(swapTokens[i]).safeTransferFrom(
+            ILSP8IdentifiableDigitalAsset(swapTokens[i]).transfer(
                 target,
                 owner,
-                swapTokenIds[i]
+                swapTokenIds[i],
+                true,
+                ""
             );
         }
 
         // swap buyer token
         address[] memory offerTokens = swaps[_swapId].ownerTokens;
-        uint256[] memory offerTokenIds = swaps[_swapId].ownerTokenIds;
+        bytes32[] memory offerTokenIds = swaps[_swapId].ownerTokenIds;
         if (offerTokens.length != 0) {
             for (uint256 i = 0; i < offerTokens.length; i++) {
-                IERC721(offerTokens[i]).safeTransferFrom(
+                ILSP8IdentifiableDigitalAsset(offerTokens[i]).transfer(
                     owner,
                     target,
-                    offerTokenIds[i]
+                    offerTokenIds[i],
+                    true,
+                    ""
                 );
             }
         }
