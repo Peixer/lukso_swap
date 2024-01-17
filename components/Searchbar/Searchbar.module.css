@@ -6,22 +6,23 @@
 }
   
 .searchInput {
-width: 300px;
-padding: 10px;
-border: 1px solid lightgray;
-border-radius: 20px;
-font-size: 16px;
-outline: none;
+    width: 300px;
+    padding: 15px 15px;
+    border: 1px solid lightgray;
+    color: #353945;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    background-color: white;
 }
 
 .searchInput::placeholder {
-color: lightgray;
+    color: lightgray;
 }
   
 .suggestionList {
     list-style: none;
     max-height: 200px;
-    overflow-y: scroll;
     padding: 0;
     margin-top: 5px;
     position: absolute;

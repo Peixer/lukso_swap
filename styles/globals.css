@@ -2,7 +2,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Inter, Helvetica, Arial, sans-serif;
+  font-family: 'DM Sans', sans-serif;
 }
 
 * {
@@ -14,8 +14,8 @@ html {
 }
 
 body {
-  color: #ffffff;
-  background: #191c1f;
+  color: #141416;
+  background: white;
   --color-primary: #fada3f;
   --color-secondary: #ff2136;
   --color-tertiary: #0294fe;

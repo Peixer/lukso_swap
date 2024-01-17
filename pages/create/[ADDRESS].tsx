@@ -10,6 +10,7 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { DealUser } from "../../lukso/types/deal";
 import { useProfile } from "../../lukso/fetchProfile";
 import { ethers } from "ethers";
+import Image from 'next/image';
 import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
 
 export default function Create() {
@@ -258,15 +259,16 @@ export default function Create() {
       )}
 
       <div className={styles.createNavbar}>
-        <button onClick={handleBack} className={styles.navBackButton}>
-          Back
-        </button>
         <button
           onClick={handleNext}
           disabled={selectedNFTs.length === 0}
           className={styles.navNextButton}
         >
-          {step < 2 ? "Next" : "Create"}
+          <span></span>
+          <span className={styles.nextButton}>{step < 2 ? "NEXT" : "CREATE"}</span>
+          <div className={styles.nextArrowButton}>
+            <Image src={"/arrow-button.png"} width={35} height={30} className={styles.img} alt={String("/arrow-button.png")} />
+          </div>
         </button>
       </div>
     </Container>

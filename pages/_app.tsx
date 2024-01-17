@@ -12,8 +12,13 @@ import { ConnectModalOptions } from "@web3-onboard/core/dist/types";
 import LuksoSwapLogo from "../public/logo";
 import chains from "../const/chains";
 import { LuksoTestnet } from "@thirdweb-dev/chains";
+import { DM_Sans } from 'next/font/google'
 
 const lukso = luksoModule();
+const dmsans = DM_Sans({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 const injected = injectedModule({
   custom: [lukso],
@@ -78,9 +83,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           height={3}
           showOnShallow={true}
         />
-        <Navbar />
-        <Component {...pageProps} />
-        <ToastContainer />
+        <main className={dmsans.className}>
+          <Navbar />
+          <Component {...pageProps} />
+          <ToastContainer />
+        </main>
       </Web3OnboardProvider>
     </ThirdwebProvider>
   );

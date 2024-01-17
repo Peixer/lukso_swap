@@ -1,5 +1,6 @@
 .main{
   overflow: hidden;
+  background-color: white;
 }
 
 .container {
@@ -84,26 +85,24 @@
 .heroTitle {
   margin-top: clamp(-30px, calc(-7vw + 57px), 5px);
   margin-bottom: 0px;
-  color: #fff;
+  color: #353945;
   font-size: Min(12vw, 80px);
   font-style: normal;
   font-weight: 700;
-  letter-spacing: 1.2px;
   text-align: center;
   overflow: visible;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.02em;
 }
 
 .heroDescription {
   margin-top: 0px;
   margin-bottom: 25px;
-  color: #dbdbdb;
+  color: #777E90;
   font-style: normal;
   font-weight: 400;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.8px;
   text-align: center;
   overflow: visible;
-  letter-spacing: -0.05em;
 }
 
 .white{
@@ -368,14 +367,19 @@
 }
 
 .connectButton{
-  border-radius: 8px;
-  background: #7448db;
+  border-radius: 24px;
+  background: #FFEEF6;
   border: none;
   font-size: 18px;
-  font-weight: 600;
   cursor: pointer;
-  color: white;
-  padding: 14px 16px;
+  color: #353945;
+  padding: 14px 42px;
   margin-top: 15px;
   font-family: inherit;
+  transition: all 0.15s ease-in-out;
+}
+
+.connectButton:hover{
+  background-color: #fad9e8;
+  cursor: pointer;
 }

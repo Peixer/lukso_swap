@@ -1,11 +1,9 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import loader from "../styles/Loader.module.css";
 import { useConnectWallet } from "@web3-onboard/react";
 import { useState } from "react";
 import Carousel from "../components/Carousel/Carousel";
-import { useProfile } from "../lukso/fetchProfile";
 import SearchBar, { Suggestion } from "../components/Searchbar/Searchbar";
 
 const Home: NextPage = () => {
@@ -21,7 +19,7 @@ const Home: NextPage = () => {
         },
         body: JSON.stringify({
           query: searchTerm,
-          hitsPerPage: 100,
+          hitsPerPage: 5,
           page: 0,
         }),
       });
@@ -75,27 +73,15 @@ const Home: NextPage = () => {
         <Carousel />
         <div className={styles.content}>
           <div className={styles.hero}>
-            <div className={styles.heroBackground}>
-              <div className={styles.heroBackgroundInner}>
-                <Image
-                  src="/hero-gradient.png"
-                  width={1390}
-                  height={1390}
-                  alt="Background gradient from red to blue"
-                  quality={100}
-                  className={styles.gradient}
-                />
-              </div>
-            </div>
             <div className={styles.heroBodyContainer}>
               <div className={styles.heroBody}>
                 <h1 className={styles.heroTitle}>
-                  Discover <span className={styles.gradient}>LuksoSwap</span>
+                  Discover LuksoSwap
                 </h1>
 
                 <h2 className={styles.heroDescription}>
                   Trade your NFTs for their NFTs.{" "}
-                  <b className={styles.white}>Easily.</b>
+                  <b>Easily.</b>
                 </h2>
 
                 {/* Conditionally render the searchbar */}
@@ -115,7 +101,7 @@ const Home: NextPage = () => {
                         ? "Connecting"
                         : wallet
                         ? "Disconnect"
-                        : "Connect wallet"}
+                        : "Connect Wallet"}
                     </button>
                   </div>
                 </div>
