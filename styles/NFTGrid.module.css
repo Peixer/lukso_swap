@@ -8,7 +8,7 @@
 }
 
 .nftContainer {
-  width: 200px;
+  width: 213px;
   margin: 8px;
   position: relative;
   overflow: hidden;
@@ -18,7 +18,7 @@
   transform: translate3d(0px, 0px, 0px);
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 14px;
   max-height: 382px;
   border: 1px solid #97939340;
   transition: all 0.25s ease-in-out;
@@ -38,6 +38,6 @@
 
 .nftSelected{
   border: 4px solid #ffd8e4;
-  padding: 4px;
+  padding: 10px;
 }
 

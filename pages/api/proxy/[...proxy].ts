@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       'x-algolia-agent': 'Algolia for JavaScript (4.20.0); Browser (lite)',
       'x-algolia-api-key': `${process.env.ALGOLIA_API_KEY}`,
       'x-algolia-application-id': `${process.env.ALGOLIA_APP_ID}`,
+      'referer': 'https://universalprofile.cloud/',
     };
 
     const algoliaPayload: Record<string, any> = {
@@ -26,8 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const data = await response.json();
 
     res.status(200).json(data);
-  } catch (error) {
+} catch (error) {
     console.error('Error handling request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
-  }
+}
 }

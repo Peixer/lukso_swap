@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getInstance, LSP4Schema, LSP8IdentifiableDigitalAssetSchema, TESTNET_RPC_ENDPOINT, UniversalProfileSchema } from './schemas';
+import { getInstance, TESTNET_RPC_ENDPOINT } from './schemas';
 import { Asset, ASSET_STANDARD, Metadata } from './types/asset';
 import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
+import LSP4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json';
+import LSP8IdentifiableDigitalAssetSchema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json';
+import UniversalProfileSchema from '@erc725/erc725.js/schemas/LSP3ProfileMetadata.json';
 import { ethers } from 'ethers';
-import { fetchLsp8Metadata } from './fetchLsp8Metadata';
 import { BigNumber } from 'bignumber.js';
 import { FetchDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData';
+import { ERC725JSONSchema } from '@erc725/erc725.js/build/main/src/types/ERC725JSONSchema';
 
 // Fetch LSP7 and LSP8 assets from a user UP address  
 export const useAssets = (profileAddress: string): [Asset[]] => {
@@ -16,7 +19,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
     const fetchAssetData = async (address: string) => {
       try {
         const assetInstance = getInstance(
-          LSP8IdentifiableDigitalAssetSchema.concat(LSP4Schema),
+          LSP4Schema.concat(LSP8IdentifiableDigitalAssetSchema) as ERC725JSONSchema[],
           address as string
         );
 
@@ -25,7 +28,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
         const useLSP4 = await assetInstance.fetchData('SupportedStandards:LSP4DigitalAsset');
 
         if(useLSP4){
-          const useLSP8 = await assetInstance.fetchData('LSP8TokenIdType');
+          const useLSP8 = await assetInstance.fetchData('LSP8TokenIdFormat');
 
           let assetData = await assetInstance.fetchData(['LSP4TokenName', 'LSP4TokenSymbol', 'LSP4Metadata']);
           let creators: FetchDataOutput | undefined;
@@ -49,10 +52,6 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
 
             // for each tokenId , fetch the associated LSP4Metadata
             tokenIds.map(async (tokenId: string) => {
-              // const [collectionMetadata] = await fetchLsp8Metadata(
-              //   tokenId,
-              //   address
-              // );
               lspAssets.push(new Asset(address, //contract address
                                 standard, // asset standard 
                                 assetData[0].value as string, // token name
@@ -63,7 +62,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
                               ));
             });
 
-          } else{ // Assuming the asset is LSP7
+          } else { // Assuming the asset is LSP7
             standard = ASSET_STANDARD.LSP7;
 
             const contract = new ethers.Contract(address, LSP7DigitalAsset.abi, provider);
@@ -95,7 +94,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
       if(profileAddress){
         try {
             const profileInstance = getInstance(
-              UniversalProfileSchema,
+              UniversalProfileSchema as ERC725JSONSchema[],
               profileAddress as string
             );
     

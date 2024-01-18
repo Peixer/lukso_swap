@@ -1,0 +1,21 @@
+.profileContainer{
+  margin-bottom: 70px;
+}
+
+.userName{
+  font-weight: bold;
+  color: #ED1D5E;
+}
+
+.copyclipIcon{
+  margin-bottom: -2px;
+  margin-left: 2px;
+}
+
+.copyclipIcon:hover{
+  cursor: pointer;
+}
+
+.copyclipIcon:focus{
+  margin: 4px;
+}

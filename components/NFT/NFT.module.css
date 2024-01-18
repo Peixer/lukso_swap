@@ -1,4 +1,4 @@
-.nftImage {
+.nftImageContainer {
   /* Override default NFT renderer width */
   width: 100% !important;
   border-radius: 8px;
@@ -6,10 +6,18 @@
   object-fit: cover;
 }
 
+.nftImage{
+  border-radius: 8px;
+}
+
+.nftSymbol{
+  font-size: 12px;
+}
+
 .nftTokenId {
   font-size: 12px;
   margin: 0px;
-  margin-top: 12px;
+  margin-top: 2px;
 }
 
 .nftName {
@@ -17,15 +25,15 @@
   white-space: nowrap;
   overflow: hidden;
   max-width: 100%;
-  color: #fff;
   font-family: inherit;
   vertical-align: inherit;
   font-size: 15px;
-  line-height: 22px;
   font-weight: 700;
   margin: 0px;
-  margin-bottom: 12px;
   margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  height: 20px;
 }
 
 .priceContainer {
@@ -80,16 +88,15 @@
 }
 
 .dataContainer{
-  padding-left: 8px;
   text-align: left;
+  margin-bottom: 12px;
 }
 
 .nftTokenInfo{
-  margin-left: 10px;
   border: 1px solid white;
-  background: #3c3840;
-  border-radius: 10px;
-  padding: 0px 3px;
+  background: #fae1f5;
+  border-radius: 6px;
+  padding: 0px 4px;
 }
 
 .nftStandard{

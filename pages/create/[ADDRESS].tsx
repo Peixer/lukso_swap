@@ -12,6 +12,7 @@ import { useProfile } from "../../lukso/fetchProfile";
 import { ethers } from "ethers";
 import Image from 'next/image';
 import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
+import { ProfileBanner } from "../../components/ProfileBanner/ProfileBanner";
 
 export default function Create() {
   // Get wallet
@@ -72,23 +73,6 @@ export default function Create() {
 
     // Force a re-render by updating the state
     setSelectedNFTs((prevSelectedNFTs) => [...prevSelectedNFTs]);
-  };
-
-  const handleBack = () => {
-    let dealUser = new DealUser(address, selectedNFTs);
-
-    if (wallet) {
-      if (step === 0) {
-        router.push("/");
-      }
-      if (step === 1) {
-        deal[1] = dealUser;
-        setSelectedNFTs(deal[0].assets);
-        setAddress(deal[0].address);
-      }
-    }
-
-    setStep(step - 1);
   };
 
   const checkAuthorizeOperator = async (
@@ -198,6 +182,7 @@ export default function Create() {
     <Container maxWidth="lg">
       {step < 2 ? (
         <>
+          <ProfileBanner address={address} />
           <h1 className="mb-0">
             {step === 0 ? "Select their items" : "Select your items"}
           </h1>
