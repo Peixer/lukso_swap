@@ -1,0 +1,76 @@
+/* DealModal.module.css */
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalInnerContainer {
+  background: white;
+  padding: 24px 20px;
+  border-radius: 8px;
+}
+
+.buttonContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tradeUser{
+  color: #ED1D5E;
+}
+
+.dealTitle{
+  margin-bottom: 8px;
+}
+
+.userInfoContainer{
+  border-bottom: 1px solid gainsboro;
+  margin-right: 24px;
+  padding-bottom: 8px;
+}
+
+.traderUserInfoContainer{
+  margin-top: 8px;
+}
+
+.items{
+  color: #777E90;
+}
+
+.sendDealButton{
+  width: 100%;
+  background-color: #ED1D5E;
+  border: 2px solid #ED1D5E;
+  border-radius: 15px;
+  padding: 5px;
+  font-weight: 600;
+}
+
+.sendDealButton:hover{
+  cursor: pointer;
+  background-color: #dd1655;
+}
+
+.cancelButton{
+  width: 100%;
+  color: #353945;
+  background-color: white;
+  border: 2px solid gainsboro;
+  border-radius: 15px;
+  padding: 5px;
+  font-weight: 600;
+}
+
+.cancelButton:hover{
+  cursor: pointer;
+  background-color: whitesmoke;
+}

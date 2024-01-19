@@ -51,7 +51,7 @@ export function ProfileBanner({address}: Props) {
   
   return (
     <div className={styles.profileContainer}>
-      <div style={{ position: 'relative', width: '100%', height: '220px' }}>
+      <div className={styles.profileInnerContainer}>
         {/* Banner Image */}
         <Image
           src={bannerImageError ? '/nodata.png' : bannerImageURL}
@@ -64,18 +64,18 @@ export function ProfileBanner({address}: Props) {
         />
 
         {/* Profile Icon (Overlay) */}
-        <div style={{ position: 'absolute', bottom: '-75px', left: '40px'}}>
+        <div className={styles.profileIconContainer}>
           <Image
             src={iconImageError ? '/nodata.png' : iconImageURL}
             alt="Profile Icon"
             width={150}
             height={150}
-            style={{ borderRadius: '15px', border: '3px solid white' }}
+            className={styles.profileIconImage}
             onError={(event) => setIconImageError(true)}
           />
         </div>
       </div>
-      <div style={{ marginTop: '15px', marginLeft: '220px'}}>
+      <div className={styles.userInfoContainer}>
         <span className={styles.userName}>@{user.name}#{user.address.substr(2, 4)}</span><br/>
         <span>{user.address.slice(0, 6)}...{user.address.slice(-6)}</span>
         <Image

@@ -5,6 +5,7 @@
 
 .dealTopContainer {
     text-align: center;
+    margin-bottom: 48px;
 }
   
 .dealNftContainer {
@@ -25,15 +26,39 @@
     flex: 1;
     border-top: 1px solid white;
     border-right: 1px solid white;
+    background-color: #F4F5F6;
 }
 
 .dealBottomRightContainer {
     text-align: center;
     flex: 1;
     border-top: 1px solid white;
+    background-color: #FCFCFD;
 }
-  
 
+.userInfoContainer{
+    border-bottom: 1px solid gainsboro;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.itemNumberContainer{
+    text-align: left;
+    padding-left: 60px;
+    padding-top: 24px;
+}
+
+.itemNumberText{
+    font-size: 18px;
+    color: #777E90;
+    margin-top: 0px;
+}
+
+.userInfoImage{
+    border-radius: 20px;
+    margin-right: 6px;
+}
 
 /* Footer navbar */
 .createNavbar {
@@ -96,4 +121,13 @@
     padding: 8px 10px;
     font-family: inherit;
     width: 80px;
+}
+
+.userName{
+    font-weight: bold;
+    color: #ED1D5E;
+}
+
+.tradeUserAddress{
+    color: #777E90;
 }

@@ -13,6 +13,8 @@ import { ethers } from "ethers";
 import Image from 'next/image';
 import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
 import { ProfileBanner } from "../../components/ProfileBanner/ProfileBanner";
+import { NETWORKS } from "../../util/config";
+import { DealModal } from "../../components/DealModal/DealModal";
 
 export default function Create() {
   // Get wallet
@@ -22,8 +24,74 @@ export default function Create() {
   const [address, setAddress] = useState<string>("");
 
   const [user] = useProfile(wallet?.accounts[0].address as string);
+  const [userInfoImageError, setUserInfoImageError] = useState(false);
   const [tradeUserAddress, setTradeUserAddress] = useState<string>("");
+  const [tradeUserInfoImageError, setTradeUserInfoImageError] = useState(false);
   const [tradeUser] = useProfile(tradeUserAddress);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleAction = async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+    );
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractABI.abi,
+      provider
+    );
+
+    const ownerTokenIds = deal[1].assets.map((asset) => asset.tokenId);
+    const ownerTokens = deal[1].assets.map(
+      (asset) => asset.contractAddress
+    );
+
+    for (let i = 0; i < ownerTokenIds.length; i++) {
+      await checkAuthorizeOperator(
+        ownerTokens[i],
+        ownerTokenIds[i],
+        provider
+      );
+    }
+
+    const encodedData = contract.interface.encodeFunctionData(
+      "createSwap",
+      [
+        "Swap",
+        deal[0].address,
+        ownerTokens,
+        ownerTokenIds,
+        deal[0].assets.map((asset) => asset.contractAddress),
+        deal[0].assets.map((asset) => asset.tokenId),
+      ]
+    );
+    
+    if(wallet){
+      await wallet.provider.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: wallet.accounts[0].address,
+            to: contractAddress,
+            data: encodedData,
+          },
+        ],
+      });
+    }
+
+    router.push("/");
+    closeModal();
+  };
+
+  const imageIpfsGateway = NETWORKS.l16.imageIpfs.url;
 
   const contractABI = require("../../contract-abi.json");
   const contractAddress = "0x581ad93A9FEA22c81e763Be8b3bE88bb7793ce4B";
@@ -112,6 +180,7 @@ export default function Create() {
     if (wallet) {
       if (step === 0) {
         deal[0] = dealUser;
+        deal[0].name = tradeUser.name;
         setAddress(wallet?.accounts[0].address);
 
         if (deal.length > 1) {
@@ -123,55 +192,7 @@ export default function Create() {
 
       if (step === 1) {
         deal[1] = dealUser;
-      }
-
-      if (step === 2) {
-        const provider = new ethers.providers.JsonRpcProvider(
-          process.env.NEXT_PUBLIC_LUKSO_RPC_URL
-        );
-        const contract = new ethers.Contract(
-          contractAddress,
-          contractABI.abi,
-          provider
-        );
-
-        const ownerTokenIds = deal[1].assets.map((asset) => asset.tokenId);
-        const ownerTokens = deal[1].assets.map(
-          (asset) => asset.contractAddress
-        );
-
-        for (let i = 0; i < ownerTokenIds.length; i++) {
-          await checkAuthorizeOperator(
-            ownerTokens[i],
-            ownerTokenIds[i],
-            provider
-          );
-        }
-
-        const encodedData = contract.interface.encodeFunctionData(
-          "createSwap",
-          [
-            "Swap",
-            deal[0].address,
-            ownerTokens,
-            ownerTokenIds,
-            deal[0].assets.map((asset) => asset.contractAddress),
-            deal[0].assets.map((asset) => asset.tokenId),
-          ]
-        );
-
-        await wallet.provider.request({
-          method: "eth_sendTransaction",
-          params: [
-            {
-              from: wallet.accounts[0].address,
-              to: contractAddress,
-              data: encodedData,
-            },
-          ],
-        });
-
-        router.push("/");
+        deal[1].name = user.name;
       }
     }
 
@@ -180,9 +201,9 @@ export default function Create() {
 
   return (
     <Container maxWidth="lg">
+      <ProfileBanner address={address} />
       {step < 2 ? (
         <>
-          <ProfileBanner address={address} />
           <h1 className="mb-0">
             {step === 0 ? "Select their items" : "Select your items"}
           </h1>
@@ -200,17 +221,28 @@ export default function Create() {
       ) : (
         <>
           <div className={styles.dealTopContainer}>
-            <h1>
-              Deal to {tradeUser.name}#{tradeUser.address.substr(2, 4)}
+            <h1 className="mb-0">
+              Deal with <span className={styles.userName}>@{tradeUser.name}#{tradeUser.address.substr(2, 4)}</span>
             </h1>
+            <span className={styles.tradeUserAddress}>{tradeUser.address}</span>
           </div>
           <div className={styles.dealBottomContainer}>
             <div className={styles.dealBottomLeftContainer}>
-              <div>
-                <h2 className="mb-0">
+              <div className={styles.userInfoContainer}>
+                <Image 
+                  className={styles.userInfoImage} 
+                  src={userInfoImageError ? '/nodata.png' : `${imageIpfsGateway}${user.profileImage[0].url.slice(7)}`}
+                  width={35} 
+                  height={35} 
+                  alt={String("userInfoImage")} 
+                  onError={(event) => setUserInfoImageError(true)}
+                />
+                <h2>
                   {user.name}#{user.address.substr(2, 4)}
                 </h2>
-                <span className="mt-0">
+              </div>
+              <div className={styles.itemNumberContainer}>
+                <span className={styles.itemNumberText}>
                   {deal[1].assets.length} item
                   {deal[1].assets.length > 1 ? "s" : ""}
                 </span>
@@ -223,13 +255,23 @@ export default function Create() {
               </div>
             </div>
             <div className={styles.dealBottomRightContainer}>
-              <div>
-                <h2 className="mb-0">
+              <div className={styles.userInfoContainer}>
+                <Image 
+                  className={styles.userInfoImage} 
+                  src={tradeUserInfoImageError ? '/nodata.png' : `${imageIpfsGateway}${tradeUser.profileImage[0].url.slice(7)}`}
+                  width={35} 
+                  height={35} 
+                  alt={String("tradeUserInfoImage")} 
+                  onError={(event) => setTradeUserInfoImageError(true)}
+                />
+                <h2>
                   {tradeUser.name}#{tradeUser.address.substr(2, 4)}
                 </h2>
-                <span className="mt-0">
+              </div>
+              <div className={styles.itemNumberContainer}>
+                <span className={styles.itemNumberText}>
                   {deal[0].assets.length} item
-                  {deal[1].assets.length > 1 ? "s" : ""}
+                  {deal[0].assets.length > 1 ? "s" : ""}
                 </span>
               </div>
               <div className={styles.dealNftContainer}>
@@ -245,17 +287,18 @@ export default function Create() {
 
       <div className={styles.createNavbar}>
         <button
-          onClick={handleNext}
+          onClick={step < 2 ? handleNext : openModal}
           disabled={selectedNFTs.length === 0}
           className={styles.navNextButton}
         >
           <span></span>
           <span className={styles.nextButton}>{step < 2 ? "NEXT" : "CREATE"}</span>
           <div className={styles.nextArrowButton}>
-            <Image src={"/arrow-button.png"} width={35} height={30} className={styles.img} alt={String("/arrow-button.png")} />
+            <Image src={"/arrow-button.png"} width={35} height={35} className={styles.img} alt={String("/arrow-button.png")} />
           </div>
         </button>
       </div>
+      <DealModal isOpen={isModalOpen} onClose={closeModal} onAction={handleAction} deal={[deal[0], deal[1]]}/>
     </Container>
   );
 }

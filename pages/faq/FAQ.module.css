@@ -1,0 +1,18 @@
+.faqContainer{
+    margin-bottom: 140px;
+    margin-top: 140px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.faqTitle{
+    font-size: 58px;
+    margin-bottom: 0px;
+}
+
+.faqSubTitle{
+    color: #353945;
+}
