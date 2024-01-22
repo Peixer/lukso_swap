@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Container from "../../components/Container/Container";
 import styles from "./Deals.module.css";
 import {
-  DEAL_STATE,
   Deal,
   DealUser,
   getEnumState,
@@ -12,12 +11,13 @@ import DealComponent from "../../components/Deal/Deal";
 import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { useConnectWallet } from "@web3-onboard/react";
 import { Asset } from "../../lukso/types/asset";
+import { getSwapContractAddress } from "../../util/network";
 
 export default function Deals() {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [{ wallet }] = useConnectWallet();
-  const { contract } = useContract(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
-  const { data, isLoading, error, refetch } = useContractRead(
+  const { contract } = useContract(getSwapContractAddress(wallet));
+  const { data, isLoading, error } = useContractRead(
     contract,
     "getSwaps",
     [wallet?.accounts[0].address]

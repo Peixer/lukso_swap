@@ -1,6 +1,7 @@
 import type { ERC725JSONSchema } from '@erc725/erc725.js';
 import { ERC725 } from '@erc725/erc725.js';
 import { NETWORKS } from '../util/config';
+import { WalletState } from '@web3-onboard/core';
 
 // '@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json'
 export const UniversalProfileSchema: ERC725JSONSchema[] = [
@@ -175,8 +176,10 @@ export const TESTNET_RPC_ENDPOINT = 'https://rpc.testnet.lukso.network';
 export function getInstance(
   providedSchema: ERC725JSONSchema[],
   contractAddress?: string,
-  provider?: any
+  wallet?: WalletState | null
 ) {
-  const erc725 = new ERC725(providedSchema, contractAddress, provider ?? TESTNET_RPC_ENDPOINT, config);
+  let provider = wallet?.chains[0].id === '0x2a' ? process.env.NEXT_PUBLIC_MAINNET_LUKSO_RPC_URL : process.env.NEXT_PUBLIC_TESTNET_LUKSO_RPC_URL;
+
+  const erc725 = new ERC725(providedSchema, contractAddress, provider, config);
   return erc725;
 }

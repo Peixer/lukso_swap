@@ -15,6 +15,7 @@ import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json
 import { ProfileBanner } from "../../components/ProfileBanner/ProfileBanner";
 import { NETWORKS } from "../../util/config";
 import { DealModal } from "../../components/DealModal/DealModal";
+import { getWalletProvider } from "../../util/network";
 
 export default function Create() {
   // Get wallet
@@ -41,7 +42,7 @@ export default function Create() {
 
   const handleAction = async () => {
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+      getWalletProvider(wallet)
     );
     const contract = new ethers.Contract(
       contractAddress,

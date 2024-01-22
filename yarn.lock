@@ -309,15 +309,6 @@
     web3-providers-http "^1.10.0"
     web3-utils "^1.10.0"
 
-"@erc725/smart-contracts@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@erc725/smart-contracts/-/smart-contracts-6.0.0.tgz#9e94a78fe8fffe6b85cd4503f9a106cbf035725b"
-  integrity sha512-6okutGGL9xbg/MSgAof2FU1UcSNE/z3p9TORlROVGaM3gi1A6FQQ7fDqtBYkPtvHureX8yS9gP7xPt3PRbP43Q==
-  dependencies:
-    "@openzeppelin/contracts" "^4.9.3"
-    "@openzeppelin/contracts-upgradeable" "^4.9.3"
-    solidity-bytes-utils "0.8.0"
-
 "@erc725/smart-contracts@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@erc725/smart-contracts/-/smart-contracts-7.0.0.tgz#60f90dc24f61b13105b49194fa2d41624c53495f"
@@ -1499,18 +1490,7 @@
     ipfs-utils "8.1.6"
     rxjs "^7.8.0"
 
-"@lukso/lsp-smart-contracts@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@lukso/lsp-smart-contracts/-/lsp-smart-contracts-0.12.1.tgz#1a0be9c95db8b997afe1496ec711669c4982de0e"
-  integrity sha512-Hj2202qv5iewgsSfZzamJgUp0QXLGwz/pjfSXQrgwqSZbT54guQ3RWp0rDJS/HfwvVn8Nmu7qZETKsJv7LvnSg==
-  dependencies:
-    "@account-abstraction/contracts" "^0.6.0"
-    "@erc725/smart-contracts" "^6.0.0"
-    "@openzeppelin/contracts" "^4.9.2"
-    "@openzeppelin/contracts-upgradeable" "^4.9.2"
-    solidity-bytes-utils "0.8.0"
-
-"@lukso/lsp-smart-contracts@^0.14.0":
+"@lukso/lsp-smart-contracts@0.14.0", "@lukso/lsp-smart-contracts@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@lukso/lsp-smart-contracts/-/lsp-smart-contracts-0.14.0.tgz#1fb639be057012d4582306c4c76c52de650257d9"
   integrity sha512-HjMpO/DfcAnL2YAoGSq4TazwsKof3CClyi33cwkOIdH7b81DMP5Z4LLjOjAGURrJlMj8wH4cLp5+4nvZ4NVSIA==

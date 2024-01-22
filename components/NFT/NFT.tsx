@@ -21,14 +21,22 @@ export default function NFTComponent({ nft }: Props) {
 
       // Set the image URL
       if (nft?.metadata?.images && nft?.metadata?.images[0]) {
-        const imageURL = nft.metadata.images[0][0].url;
-        setImageURL(`${imageIpfsGateway}${imageURL.slice(7)}`);
+        const imageURL = nft.metadata.images[0][0]?.url ?? '/nodata.png';
+        if(imageURL.startsWith("ipfs")){
+          setImageURL(`${imageIpfsGateway}${imageURL.slice(7)}`);
+        } else{
+          setImageURL(imageURL);
+        }
       } 
   
       // Set the icon URL
       if (nft?.metadata?.icon && nft?.metadata?.icon[0]) {
         const iconURL = nft.metadata.icon[0].url;
-        setIconURL(`${iconIpfsGateway}${iconURL.slice(7)}`);
+        if(iconURL.startsWith("ipfs")){
+          setIconURL(`${iconIpfsGateway}${iconURL.slice(7)}`);
+        } else{
+          setIconURL(iconURL);
+        }
       }
     }, [nft]);
 

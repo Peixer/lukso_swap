@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getInstance, TESTNET_RPC_ENDPOINT } from './schemas';
+import { getInstance } from './schemas';
 import { Asset, ASSET_STANDARD, Metadata } from './types/asset';
-import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json'
+import LSP8IdentifiableDigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP8IdentifiableDigitalAsset.json';
 import LSP7DigitalAsset from '@lukso/lsp-smart-contracts/artifacts/LSP7DigitalAsset.json'
 import LSP4Schema from '@erc725/erc725.js/schemas/LSP4DigitalAsset.json';
 import LSP8IdentifiableDigitalAssetSchema from '@erc725/erc725.js/schemas/LSP8IdentifiableDigitalAsset.json';
@@ -10,17 +10,22 @@ import { ethers } from 'ethers';
 import { BigNumber } from 'bignumber.js';
 import { FetchDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeData';
 import { ERC725JSONSchema } from '@erc725/erc725.js/build/main/src/types/ERC725JSONSchema';
+import { useConnectWallet } from '@web3-onboard/react';
+import { getWalletProvider } from '../util/network';
+import { fetchLsp8Metadata } from './fetchLSP8Metadata';
 
 // Fetch LSP7 and LSP8 assets from a user UP address  
 export const useAssets = (profileAddress: string): [Asset[]] => {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [{ wallet }] = useConnectWallet();
 
   useEffect(() => {
     const fetchAssetData = async (address: string) => {
       try {
         const assetInstance = getInstance(
           LSP4Schema.concat(LSP8IdentifiableDigitalAssetSchema) as ERC725JSONSchema[],
-          address as string
+          address as string,
+          wallet
         );
 
         let lspAssets: Asset[] = [];
@@ -40,7 +45,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
             console.log('Could not fetch creators for asset: ', address);
           }
 
-          const provider = new ethers.providers.JsonRpcProvider(TESTNET_RPC_ENDPOINT);
+          const provider = new ethers.providers.JsonRpcProvider(getWalletProvider(wallet));
 
           // Assuming the asset is LSP8
           if(useLSP8.value !== null){
@@ -51,15 +56,23 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
             let tokenIds = await contract.tokenIdsOf(profileAddress);
 
             // for each tokenId , fetch the associated LSP4Metadata
-            tokenIds.map(async (tokenId: string) => {
-              lspAssets.push(new Asset(address, //contract address
-                                standard, // asset standard 
-                                assetData[0].value as string, // token name
-                                assetData[1].value as string, // token symbol
-                                tokenId, // token id
-                                creators ? creators.value as string[] : [], // creators
-                                (assetData[2].value as { LSP4Metadata?: Metadata })?.LSP4Metadata // metadata 
-                              ));
+            const tokenMetadataPromises = tokenIds.map(async (tokenId: string) => {
+              return fetchLsp8Metadata(tokenId, address, wallet);
+            });
+  
+            const tokenMetadataArray = await Promise.all(tokenMetadataPromises);
+  
+            // Process tokenMetadataArray and create lspAssets array
+            tokenMetadataArray.forEach((tokenMetadata, index) => {  
+              lspAssets.push(new Asset(
+                address,
+                standard,
+                assetData[0].value as string,
+                assetData[1].value as string,
+                tokenIds[index],
+                creators ? creators.value as string[] : [],
+                (tokenMetadata[0] as { LSP4Metadata?: Metadata })?.LSP4Metadata
+              ));
             });
 
           } else { // Assuming the asset is LSP7
@@ -91,30 +104,35 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
     }
 
     const fetchAssets = async () => {
-      if(profileAddress){
+      if (profileAddress) {
         try {
-            const profileInstance = getInstance(
-              UniversalProfileSchema as ERC725JSONSchema[],
-              profileAddress as string
-            );
-    
-            const result = await profileInstance.fetchData('LSP5ReceivedAssets[]');
-    
-            const resultValue = Array.isArray(result.value) ? result.value : [result.value];
-    
-            const filteredAssets = (
-              await Promise.all(
-                resultValue.map(async (address: string) => await fetchAssetData(address))
-              )
-            ).flat().filter((asset): asset is Asset => !!asset) as Asset[];            
-    
-            setAssets(filteredAssets);
+          const profileInstance = getInstance(
+            UniversalProfileSchema as ERC725JSONSchema[],
+            profileAddress as string,
+            wallet
+          );
 
-            console.log(filteredAssets);
+          const result = await profileInstance.fetchData('LSP5ReceivedAssets[]');
+
+          const resultValue = Array.isArray(result.value) ? result.value : [result.value];
+
+          const assetPromises = resultValue.map(async (address: string) => {
+            const assets = await fetchAssetData(address);
+            return assets;
+          });
+
+          // Wait for all promises in assetPromises array to resolve
+          const assetsArray = await Promise.all(assetPromises);
+
+          const filteredAssets = assetsArray.flat().filter((asset): asset is Asset => !!asset);
+
+          setAssets(filteredAssets);
+
+          console.log("filteredAssets: ", filteredAssets);
         } catch (e) {
           console.log('error', e);
         }
-    }};
+      }};
     fetchAssets();
   }, [profileAddress]);
 

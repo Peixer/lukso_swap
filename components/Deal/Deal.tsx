@@ -4,6 +4,7 @@ import { DEAL_STATE, Deal } from "../../lukso/types/deal";
 import { ethers } from "ethers";
 import { useConnectWallet } from "@web3-onboard/react";
 import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
+import { getWalletProvider } from "../../util/network";
 
 type Props = {
   deal: Deal;
@@ -65,7 +66,7 @@ export default function DealComponent({ deal }: Props) {
 
   async function acceptOffer(deal: Deal) {
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+      getWalletProvider(wallet)
     );
 
     const targetTokenIds = deal.users[1].assets.map((asset) => asset.tokenId);
@@ -100,7 +101,7 @@ export default function DealComponent({ deal }: Props) {
 
   async function rejectOffer(deal: Deal) {
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.NEXT_PUBLIC_LUKSO_RPC_URL
+      getWalletProvider(wallet)
     );
     const contract = new ethers.Contract(
       contractAddress,

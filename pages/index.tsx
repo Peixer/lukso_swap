@@ -5,14 +5,18 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { useState } from "react";
 import Carousel from "../components/Carousel/Carousel";
 import SearchBar, { Suggestion } from "../components/Searchbar/Searchbar";
+import { getAlgoliaAPIKey, getAlgoliaAppId, getAlgoliaEndpoint, getAlgoliaLocalEndpoint } from "../util/network";
 
 const Home: NextPage = () => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const [loading, setLoading] = useState(false); // Initialize loading state
+
   const fetchData = async (searchTerm: string) => {
     const apiUrl = '/api/proxy';
     try {
-      const response = await fetch(`${apiUrl}/prod_testnet_universal_profiles/query`, {
+      const response = await fetch(`${apiUrl}${getAlgoliaLocalEndpoint(wallet)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -21,6 +25,9 @@ const Home: NextPage = () => {
           query: searchTerm,
           hitsPerPage: 5,
           page: 0,
+          appId: getAlgoliaAppId(wallet),
+          apiKey: getAlgoliaAPIKey(wallet),
+          endpoint: getAlgoliaEndpoint(wallet)
         }),
       });
 
@@ -51,9 +58,6 @@ const Home: NextPage = () => {
   const handleSearch = (inputValue: string) => {
     fetchData(inputValue);
   };
-
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
-  const [loading, setLoading] = useState(false); // Initialize loading state
 
   const loadingConnect = async () => {
     setLoading(true);
