@@ -8,7 +8,7 @@ export default function FAQ() {
     <div className={styles.faqContainer}>
       <h1 className={styles.faqTitle}>FAQ</h1>
       <p className={styles.faqSubTitle}>
-        Don't find your question here ? Reach out to us on discord and twitter.
+        {`Don't find your question here ? Reach out to us on discord and twitter.`}
       </p>
       <FAQCard
         title="What is LuksoSwap ?"
