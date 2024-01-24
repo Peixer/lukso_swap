@@ -2,7 +2,7 @@ import Image from "next/image";
 import styles from "./ProfileBanner.module.css";
 import { useProfile } from "../../lukso/fetchProfile";
 import { useEffect, useState } from "react";
-import { NETWORKS } from "../../util/config";
+import { IPFS_URL } from "../../util/config";
 
 /**
  * Profile banner showed during the deal creation process.
@@ -28,7 +28,7 @@ export function ProfileBanner({address}: Props) {
     }
   };
 
-  const imageIpfsGateway = NETWORKS.l16.imageIpfs.url;
+  const imageIpfsGateway = IPFS_URL;
 
   useEffect(() => {
     if (address) {

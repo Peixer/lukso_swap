@@ -15,8 +15,9 @@ import { getWalletProvider } from '../util/network';
 import { fetchLsp8Metadata } from './fetchLSP8Metadata';
 
 // Fetch LSP7 and LSP8 assets from a user UP address  
-export const useAssets = (profileAddress: string): [Asset[]] => {
+export const useAssets = (profileAddress: string): [Asset[], boolean] => {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [{ wallet }] = useConnectWallet();
 
   useEffect(() => {
@@ -97,7 +98,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
         } 
 
         return false;
-
+        
       } catch (error) {
         console.log('Could not fetch asset data: ', error);
       }
@@ -106,6 +107,7 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
     const fetchAssets = async () => {
       if (profileAddress) {
         try {
+          setLoading(true);
           const profileInstance = getInstance(
             UniversalProfileSchema as ERC725JSONSchema[],
             profileAddress as string,
@@ -129,12 +131,14 @@ export const useAssets = (profileAddress: string): [Asset[]] => {
           setAssets(filteredAssets);
 
           console.log("filteredAssets: ", filteredAssets);
+          setLoading(false);
         } catch (e) {
+          setLoading(false);
           console.log('error', e);
         }
       }};
     fetchAssets();
   }, [profileAddress]);
 
-  return [assets];
+  return [assets, loading];
 };

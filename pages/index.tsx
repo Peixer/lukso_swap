@@ -6,6 +6,7 @@ import { useState } from "react";
 import Carousel from "../components/Carousel/Carousel";
 import SearchBar, { Suggestion } from "../components/Searchbar/Searchbar";
 import { getAlgoliaAPIKey, getAlgoliaAppId, getAlgoliaEndpoint, getAlgoliaLocalEndpoint } from "../util/network";
+import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 
 const Home: NextPage = () => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -68,11 +69,7 @@ const Home: NextPage = () => {
   return (
     <main className={styles.main}>
       {/* Conditionally render the loader */}
-      {loading && (
-        <div className={loader.loaderContainer}>
-          <div className={loader.loader}></div>
-        </div>
-      )}
+      <LoadingSpinner isLoading={loading} />
       <div className={styles.container}>
         <Carousel />
         <div className={styles.content}>

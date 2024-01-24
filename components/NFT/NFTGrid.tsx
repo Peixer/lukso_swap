@@ -3,6 +3,7 @@ import Skeleton from "../Skeleton/Skeleton";
 import NFT from "./NFT";
 import styles from "../../styles/NFTGrid.module.css";
 import { Asset } from "../../lukso/types/asset";
+import Link from "next/link";
 
 type Props = {
   data: any;
@@ -43,7 +44,12 @@ export default function NFTGrid({
           );
         })
       ) : (
-        <p>{emptyText}</p>
+        <>
+          <span>{emptyText}</span>
+            <Link href="/" className={styles.nftGridEmpty}>
+                Navigate back to home screen.
+            </Link>
+        </>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-/* DealModal.module.css */
+/* NetworkModal.module.css */
 .modalContainer {
   position: fixed;
   top: 0;
@@ -25,29 +25,7 @@
   gap: 3px;
 }
 
-.tradeUser{
-  color: #ED1D5E;
-}
-
-.dealTitle{
-  margin-bottom: 8px;
-}
-
-.userInfoContainer{
-  border-bottom: 1px solid gainsboro;
-  margin-right: 24px;
-  padding-bottom: 8px;
-}
-
-.traderUserInfoContainer{
-  margin-top: 8px;
-}
-
-.items{
-  color: #777E90;
-}
-
-.sendDealButton{
+.switchNetworkButton{
   width: 100%;
   background-color: #ED1D5E;
   border: 2px solid #ED1D5E;
@@ -56,22 +34,7 @@
   font-weight: 600;
 }
 
-.sendDealButton:hover{
+.switchNetworkButton:hover{
   cursor: pointer;
   background-color: #dd1655;
-}
-
-.cancelButton{
-  width: 100%;
-  color: #353945;
-  background-color: white;
-  border: 2px solid gainsboro;
-  border-radius: 15px;
-  padding: 5px;
-  font-weight: 600;
-}
-
-.cancelButton:hover{
-  cursor: pointer;
-  background-color: whitesmoke;
 }

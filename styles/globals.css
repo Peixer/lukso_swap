@@ -18,7 +18,7 @@ body {
   background: white;
   --color-primary: #fada3f;
   --color-secondary: #ff2136;
-  --color-tertiary: #0294fe;
+  --color-tertiary: #ff568c;
   --color-quaternary: #9b4dff;
   --card-background: #252133;
   --highlighted-background: #202326;
@@ -55,3 +55,21 @@ a {
 .swiper-wrapper {
   transition-timing-function: linear !important;
 }
+
+:root{
+  --onboard-modal-z-index: 9;
+  --onboard-account-select-modal-z-index: 9;
+  --onboard-login-modal-z-index: 9;
+  --account-center-z-index: 9;
+  --account-center-maximized-network-selector-color: #ED1D5E;
+  --account-center-app-btn-font-family: 'DM Sans', sans-serif;
+  --onboard-font-family-normal:  'DM Sans', sans-serif;
+  --account-select-modal-font-family-normal:  'DM Sans', sans-serif;
+  --notify-onboard-font-family-normal:  'DM Sans', sans-serif;
+}
+
+.network-container.svelte-177u10y{
+  visibility: hidden !important;
+  height: 0 !important;
+  padding: 0 !important;
+};
