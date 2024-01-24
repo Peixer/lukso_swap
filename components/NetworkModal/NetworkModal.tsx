@@ -33,8 +33,6 @@ export function NetworkModal() {
   };
 
   useEffect(() => {
-    console.log("connectedChain change: ", connectedChain);
-    console.log("settingChain change: ", settingChain);
     if(connectedChain){
       // If user is connected but not on the testnet
       if(connectedChain.id !== chains[0].id){
@@ -46,10 +44,6 @@ export function NetworkModal() {
       console.debug("user needs to connect a wallet");
     }
   }, [connectedChain, settingChain]);
-
-  useEffect(() => {
-    console.log("wallet change: ", wallet);
-  }, [wallet]);
 
   if (!isModalOpen) {
     return null;
