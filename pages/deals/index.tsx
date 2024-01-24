@@ -12,8 +12,10 @@ import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { useConnectWallet } from "@web3-onboard/react";
 import { Asset } from "../../lukso/types/asset";
 import { getSwapContractAddress } from "../../util/network";
+import { useRouter } from "next/navigation";
 
 export default function Deals() {
+  const router = useRouter();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [{ wallet }] = useConnectWallet();
   const { contract } = useContract(getSwapContractAddress(wallet));
@@ -54,6 +56,12 @@ export default function Deals() {
       setDeals(deals);
     }
   }, [data, error, isLoading, wallet]);
+
+  useEffect(() => {
+    if(wallet === null){
+      router.push("/");
+    }
+  }, [wallet]);
 
   return (
     <Container maxWidth="lg">
