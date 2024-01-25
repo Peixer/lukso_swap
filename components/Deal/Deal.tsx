@@ -12,7 +12,7 @@ type Props = {
 
 export default function DealComponent({ deal }: Props) {
   const [{ wallet }] = useConnectWallet();
-  const contractAddress = "0x581ad93A9FEA22c81e763Be8b3bE88bb7793ce4B"!;
+  const contractAddress = process.env.NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS!;
   const contractABI = require("../../contract-abi.json");
 
   const dealStateClass = (state: DEAL_STATE) => {

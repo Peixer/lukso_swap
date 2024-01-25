@@ -11,8 +11,9 @@ import DealComponent from "../../components/Deal/Deal";
 import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { useConnectWallet } from "@web3-onboard/react";
 import { Asset } from "../../lukso/types/asset";
-import { getSwapContractAddress } from "../../util/network";
+import { getSwapContractAddress, getWalletProvider } from "../../util/network";
 import { useRouter } from "next/navigation";
+import { ethers } from "ethers";
 
 export default function Deals() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function Deals() {
     "getSwaps",
     [wallet?.accounts[0].address]
   );
-
+  
   useEffect(() => {
     if (isLoading) return;
     if (error) return;
@@ -63,6 +64,19 @@ export default function Deals() {
     }
   }, [wallet]);
 
+  const fetchContract = async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      getWalletProvider(wallet)
+    );
+    const contractAddress = process.env.NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS!;
+    const contractABI = require("../../contract-abi.json");
+    const contract = new ethers.Contract(contractAddress!, contractABI.abi, provider);
+    // need to fetch how many LSP7 tokens ones have
+    let swaps = await contract.getSwaps(wallet?.accounts[0].address);
+
+    console.log("swaps: ", swaps);
+  }
+
   return (
     <Container maxWidth="lg">
       <div className={styles.dealsContainer}>
@@ -81,6 +95,7 @@ export default function Deals() {
         ) : (
           <>
             <h2>You have no deals to review.</h2>
+            <button onClick={fetchContract}>fetch contract</button>
           </>
         )}
       </div>

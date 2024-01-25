@@ -47,7 +47,7 @@ export function Navbar() {
           </div>
         </div>
         <div className={styles.navRight}>
-          <h4>
+          <h4 className={styles.hideLink}>
             <Link href="/faq">
               How it works
             </Link>
