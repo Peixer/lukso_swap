@@ -11,14 +11,12 @@ import { DealUser } from "../../lukso/types/deal";
 import { useProfile } from "../../lukso/fetchProfile";
 import { ethers } from "ethers";
 import Image from 'next/image';
-import LSP8Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP8Mintable.json";
-import LSP7Mintable from "@lukso/lsp-smart-contracts/artifacts/LSP7Mintable.json";
 import { ProfileBanner } from "../../components/ProfileBanner/ProfileBanner";
 import { IPFS_URL } from "../../util/config";
 import { DealModal } from "../../components/DealModal/DealModal";
 import { getWalletProvider } from "../../util/network";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
-import { Uint256 } from "web3";
+import { checkLSP7AuthorizeOperator, checkLSP8AuthorizeOperator } from "../../util/checkAuthorizeOperator";
 
 export default function Create() {
   // Get wallet
@@ -87,12 +85,14 @@ export default function Create() {
     for (let i = 0; i < ownerTokens.length; i++) {
       if (ownerTokenStandard[i]) {
         await checkLSP8AuthorizeOperator(
+          wallet!,
           ownerTokens[i],
           ownerTokenIds[i],
           provider
         );
       } else {
         await checkLSP7AuthorizeOperator(
+          wallet!,
           ownerTokens[i],
           ownerTokenAmount[i], // amount of LSP7 tokens selected
           provider
@@ -183,69 +183,6 @@ export default function Create() {
 
     // Force a re-render by updating the state
     setSelectedNFTs((prevSelectedNFTs) => [...prevSelectedNFTs]);
-  };
-
-  const checkLSP7AuthorizeOperator = async (
-    token: any,
-    amount: Uint256,
-    provider: any
-  ) => {
-    const myToken = new ethers.Contract(token, LSP7Mintable.abi, provider);
-
-    const authorizedAmountFor = await myToken.functions.authorizedAmountFor(
-      contractAddress,
-      deal[1].address
-    );
-    console.log("authorizedAmountFor: ", Number(authorizedAmountFor[0]._hex));
-    if (Number(authorizedAmountFor[0]._hex) < 1) {
-      const encodedDataApprove = myToken.interface.encodeFunctionData(
-        "authorizeOperator",
-        [contractAddress, amount, "0x"]
-      );
-
-      const hash: any = await wallet!.provider.request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            from: wallet!.accounts[0].address,
-            to: token,
-            data: encodedDataApprove,
-          },
-        ],
-      });
-      await provider.waitForTransaction(hash);
-    }
-  };
-
-  const checkLSP8AuthorizeOperator = async (
-    token: any,
-    tokenId: any,
-    provider: any
-  ) => {
-    const myToken = new ethers.Contract(token, LSP8Mintable.abi, provider);
-
-    const isOperatorFor = await myToken.functions.isOperatorFor(
-      contractAddress,
-      tokenId
-    );
-    if (!isOperatorFor[0]) {
-      const encodedDataApprove = myToken.interface.encodeFunctionData(
-        "authorizeOperator",
-        [contractAddress, tokenId, "0x"]
-      );
-
-      const hash: any = await wallet!.provider.request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            from: wallet!.accounts[0].address,
-            to: token,
-            data: encodedDataApprove,
-          },
-        ],
-      });
-      await provider.waitForTransaction(hash);
-    }
   };
 
   const handleNext = async () => {

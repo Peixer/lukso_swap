@@ -54,7 +54,7 @@ export default function NFTComponent({ nft }: Props) {
         <div>
           <p className={styles.nftName}>{nft.name} 
             <span className={styles.nftTokenId}>
-              <span className={styles.nftTokenInfo}>{nft.contractStandard === ASSET_STANDARD.LSP7 ? `${nft.amount} owned` : (Number(nft.tokenId) < 10000000000000 ? `#${Number(nft.tokenId)}` : nft.tokenId.slice(0,3)+".."+nft.tokenId.slice(-2))}</span>
+              <span className={styles.nftTokenInfo}>{nft.contractStandard === ASSET_STANDARD.LSP7 ? `${parseInt(nft.amount, 16)} owned` : (Number(nft.tokenId) < 10000000000000 ? `#${Number(nft.tokenId)}` : nft.tokenId.slice(0,3)+".."+nft.tokenId.slice(-2))}</span>
             </span>
           </p>
           <span className={styles.nftSymbol}>${nft.symbol}</span>

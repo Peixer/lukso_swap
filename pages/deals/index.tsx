@@ -8,40 +8,46 @@ import {
   getEnumState,
 } from "../../lukso/types/deal";
 import DealComponent from "../../components/Deal/Deal";
-import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { useConnectWallet } from "@web3-onboard/react";
 import { Asset } from "../../lukso/types/asset";
 import { getSwapContractAddress, getWalletProvider } from "../../util/network";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
+import { ProfileBanner } from "../../components/ProfileBanner/ProfileBanner";
 
 export default function Deals() {
   const router = useRouter();
   const [deals, setDeals] = useState<Deal[]>([]);
+  const [swaps, setSwaps] = useState<any[]>([]);
   const [{ wallet }] = useConnectWallet();
-  const { contract } = useContract(getSwapContractAddress(wallet));
-  const { data, isLoading, error } = useContractRead(
-    contract,
-    "getSwaps",
-    [wallet?.accounts[0].address]
-  );
-  
+
   useEffect(() => {
-    if (isLoading) return;
-    if (error) return;
-    if (!wallet) return;
-    if (data) {
-      let deals = data.map((deal: any) => {
+    fetchContract();
+  }, []);
+
+  useEffect(() => {
+    if(wallet === null){
+      router.push("/");
+    }
+  }, [wallet]);
+
+  useEffect(() => {
+    if (swaps) {
+      let deals = swaps.map((deal: any) => {
         const assetsTarget = deal.targetAccountTokenIds.map((tokenId: any, index: any) => {
           return {
             contractAddress: deal.targetAccountTokens[index],
             tokenId: tokenId,
+            amount: deal.targetAccountTokenAmounts[index],
+            contractStandard: deal.targetAccountTokenTypes[index],
           } as Asset;
         })
         const assetsOwner = deal.ownerTokenIds.map((tokenId: any, index: any) => {
           return {
             contractAddress: deal.ownerTokens[index],
             tokenId: tokenId,
+            amount: deal.ownerTokenAmounts[index],
+            contractStandard: deal.ownerTokenTypes[index],
           } as Asset;
         })
         return new Deal(
@@ -56,49 +62,48 @@ export default function Deals() {
       });
       setDeals(deals);
     }
-  }, [data, error, isLoading, wallet]);
-
-  useEffect(() => {
-    if(wallet === null){
-      router.push("/");
-    }
-  }, [wallet]);
+  }, [swaps]);
 
   const fetchContract = async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      getWalletProvider(wallet)
-    );
-    const contractAddress = process.env.NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS!;
-    const contractABI = require("../../contract-abi.json");
-    const contract = new ethers.Contract(contractAddress!, contractABI.abi, provider);
-    // need to fetch how many LSP7 tokens ones have
-    let swaps = await contract.getSwaps(wallet?.accounts[0].address);
+    if(wallet){
+      const provider = new ethers.providers.JsonRpcProvider(
+        getWalletProvider(wallet)
+      );
+      const contractAddress = getSwapContractAddress(wallet);
+      const contractABI = require("../../contract-abi.json");
+      const contract = new ethers.Contract(contractAddress!, contractABI.abi, provider);
 
-    console.log("swaps: ", swaps);
+      let swapData = await contract.getSwaps(wallet?.accounts[0].address);
+
+      setSwaps(swapData);
+    }
   }
 
   return (
-    <Container maxWidth="lg">
-      <div className={styles.dealsContainer}>
-        <h1 className="mb-0">See your deals</h1>
-        <p className="mt-0">
-          You can see your pending, accepted and rejected deals.
-        </p>
-        {deals.length > 0 ? (
-          deals.map((deal) => {
-            return (
-              <div key={String(deal)} className={styles.dealContainer}>
-                <DealComponent deal={deal} />
-              </div>
-            );
-          })
-        ) : (
-          <>
-            <h2>You have no deals to review.</h2>
-            <button onClick={fetchContract}>fetch contract</button>
-          </>
-        )}
-      </div>
-    </Container>
+    <>
+      <Container maxWidth="lg">
+        <ProfileBanner address={wallet?.accounts[0]?.address!} />
+        <div className={styles.dealsContainer}>
+          <h1 className="mb-0">See your deals</h1>
+          <p className="mt-0">
+            You can see your pending, accepted and rejected deals.
+          </p>
+          {deals.length > 0 ? (
+            deals.map((deal) => {
+              return (
+                <div key={String(deal.id)} className={styles.dealContainer}>
+                  <DealComponent deal={deal} />
+                </div>
+              );
+            })
+          ) : (
+            <>
+              <h2>You have no deals to review.</h2>
+              <button onClick={fetchContract}>fetch contract</button>
+            </>
+          )}
+        </div>
+      </Container>
+    </>
   );
 }
