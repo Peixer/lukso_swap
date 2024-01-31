@@ -15,6 +15,7 @@ export type ImageJson = {
   
 export type Metadata = {
   description: string;
+  attributes: any[];
   links: LinkJson[];
   icon: ImageJson[];
   images: ImageJson[][];
@@ -24,6 +25,7 @@ export type Metadata = {
     url: string;
     fileType: string;
   }[];
+  name: string;
 };
 
 export enum ASSET_STANDARD{

@@ -18,6 +18,7 @@
   transform: translate3d(0px, 0px, 0px);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 14px;
   max-height: 382px;
   border: 1px solid #97939340;
@@ -46,3 +47,19 @@
   font-weight: bold;
 }
 
+.showInfoButton{
+  background-color: #FFEEF6;
+  letter-spacing: 1px;
+  color: #353945;
+  font-size: 12px;
+  font-weight: 600;
+  border: 0px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: all 0.15s ease-in-out;
+}
+
+.showInfoButton:hover{
+  background-color: #fad9e8;
+  cursor: pointer;
+}

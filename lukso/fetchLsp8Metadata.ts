@@ -215,5 +215,5 @@ const getLsp8Metadata = async (
     })
   })
 
-  return validateLsp4MetaData(lsp8Metadata);
+  return lsp8Metadata;
 }

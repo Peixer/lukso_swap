@@ -35,3 +35,14 @@ export const getAlgoliaLocalEndpoint = (wallet: WalletState | null) => {
 export const getSwapContractAddress = (wallet: WalletState | null) => {
   return wallet?.chains[0].id === '0x2a' ? process.env.NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS : process.env.NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS;
 }
+
+export const getBlockchainName = (wallet: WalletState | null) => {
+  return wallet?.chains[0].id === '0x2a' ? "Lukso" : "Lukso Testnet";
+}
+
+export const getExplorerLink = (contractAddress: string, network: string) => {
+  let testnetExplorer = "https://explorer.execution.testnet.lukso.network/address/";
+  let mainnetExplorer = "https://explorer.execution.mainnet.lukso.network/address/";
+
+  return network === "Lukso" ? mainnetExplorer+contractAddress : testnetExplorer+contractAddress;
+}

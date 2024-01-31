@@ -133,5 +133,5 @@ const getLsp7Metadata = async (
     })
   })
 
-  return validateLsp4MetaData(lsp7Metadata);
+  return lsp7Metadata;
 }
