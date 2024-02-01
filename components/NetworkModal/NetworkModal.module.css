@@ -1,0 +1,40 @@
+/* NetworkModal.module.css */
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.modalInnerContainer {
+  background: white;
+  padding: 24px 20px;
+  border-radius: 8px;
+}
+
+.buttonContainer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.switchNetworkButton{
+  width: 100%;
+  background-color: #ED1D5E;
+  border: 2px solid #ED1D5E;
+  border-radius: 15px;
+  padding: 5px;
+  font-weight: 600;
+}
+
+.switchNetworkButton:hover{
+  cursor: pointer;
+  background-color: #dd1655;
+}

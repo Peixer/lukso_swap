@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers, run } from "hardhat";
 import * as dotenv from 'dotenv';
 import { SwapToken__factory } from "../typechain-types";
 
@@ -18,6 +18,13 @@ async function main() {
     const nftContract = await nftFactory.deploy();
     const nftContractAddress = await nftContract.getAddress();
     console.log(`The NFT contract address is ${nftContractAddress}`);
+
+    console.log(`Verifying contract on Etherscan...`);
+
+    await run(`verify:verify`, {
+      address: nftContractAddress,
+      constructorArguments: [],
+    });
 }
 
 main()

@@ -1,0 +1,77 @@
+/* NFTModalInfoCard.module.css */
+.nftModalContainer {
+    border: 2px solid gainsboro;
+    border-radius: 8px;
+    margin: 10px 10px 10px 0px;
+    overflow: hidden;
+    width: 380px;
+    font-size: 12px;
+    transition: height 0.3s ease-in-out;
+  }
+
+.assetDetailsContainer{
+    display: flex;
+    border-top: 2px solid gainsboro;
+    justify-content: space-between;
+    background-color: rgb(252, 251, 251);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+  
+.nftModalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 15px;
+}
+  
+  .nftModalTitle{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .arrow {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #ccc;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    margin-left: 8px;
+    transition: transform 0.3s ease-in-out; 
+  }
+  
+  .down {
+    transform: rotate(45deg);
+    margin-bottom: 5px;
+  }
+  
+  .up {
+    transform: rotate(-135deg);
+    margin-bottom: 0px;
+  }
+  
+  .description {
+    margin-top: 10px;
+    padding-top: 10px;
+    text-align: left;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out; 
+  }
+  
+  .nftModalContainer.expanded {
+    height: auto;
+  }
+  
+  .nftModalContainer.expanded .arrow {
+    transform: rotate(-135deg);
+  }
+  
+  .nftModalContainer.expanded .description {
+    opacity: 1;
+  }
+  
+  .contractAddressLink{
+    color: #ED1D5E;
+  }

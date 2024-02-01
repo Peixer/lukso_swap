@@ -1,11 +1,28 @@
 .dealContainer {
-    width: 50vw;
     min-width: 300px;
+    border: 1px solid gainsboro;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    padding: 10px;
+    background: rgb(220 220 220 / 12%);
+    padding: 15px 10px 10px 15px;
     object-fit: cover;
     margin-bottom: 10px;
+}
+
+.dealImage{
+    border-radius: 5px;
+}
+
+.dealText{
+    font-weight: bold;
+    color: #353945;
+}
+
+.dealUserText{
+    color: #ED1D5E;
+}
+
+.userImage{
+    border-radius: 50%;
 }
   
 .dealState {
@@ -16,6 +33,41 @@
     border-radius: 5px;
     width: 80px;
     text-align: center;
+    margin-bottom: 15px;
+}
+
+.dealImageContainer{
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.dealDataInnerContainer{
+    display: flex;
+}
+
+.dealItemNumber{
+    color: lightslategray;
+}
+
+.dealUserContainer{
+    display: flex;
+    border-left: 1px solid gainsboro;
+    padding-left: 20px;
+    gap: 10px;
+    align-items: center;
+}
+
+.dealItemsContainer{
+    display: flex;
+    gap: 10px;
+}
+
+.tradeUserText{
+    padding-left: 10px;
+    border-left: 1px solid gainsboro;
 }
 
 .dealActionContainer {
@@ -23,17 +75,47 @@
     gap: 5px;
     border-top: 1px solid lightgray;
     padding-top: 10px;
-    justify-content: flex-end;
+    margin-top: 10px;
+    justify-content: flex-start;
 }
 
 .dealStatePending{
-    background: rgb(132, 73, 221);
+    background: #f9bbf7;
 }
 
 .dealStateAccepted{
-    background: rgb(37, 154, 68);
+    background:   #fcbcd8;
 }
 
 .dealStateRejected{
-    background: rgb(55, 100, 213);
+    background: #fd9191;
+}
+
+.acceptDealButton{
+    width: 70%;
+    background-color: #ED1D5E;
+    border: 2px solid #ED1D5E;
+    border-radius: 15px;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.acceptDealButton:hover{
+    cursor: pointer;
+    background-color: #e4376e;
+}
+
+.rejectDealButton{
+    width: 30%;
+    color: #353945;
+    background-color: white;
+    border: 2px solid gainsboro;
+    border-radius: 15px;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.rejectDealButton:hover{
+    cursor: pointer;
+    background-color: whitesmoke;
 }

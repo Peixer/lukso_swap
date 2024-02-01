@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   basePath: "",
   images: {
-    domains: ['2eff.lukso.dev', 'api.universalprofile.cloud'],
+    domains: ['abmngrfkyujklttygiaq.supabase.co', '2eff.lukso.dev', 'api.universalprofile.cloud'],
   },
 };
 

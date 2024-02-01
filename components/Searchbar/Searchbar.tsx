@@ -44,7 +44,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, suggestions }) => {
     <div className={styles.searchBar}>
       <input
         type="text"
-        placeholder="Search Lukso addresses"
+        placeholder="Search by profile or address"
         value={searchTerm}
         onChange={handleInputChange}
         className={styles.searchInput}

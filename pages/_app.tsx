@@ -12,8 +12,14 @@ import { ConnectModalOptions } from "@web3-onboard/core/dist/types";
 import LuksoSwapLogo from "../public/logo";
 import chains from "../const/chains";
 import { LuksoTestnet } from "@thirdweb-dev/chains";
+import { DM_Sans } from 'next/font/google'
+import { NetworkModal } from "../components/NetworkModal/NetworkModal";
 
 const lukso = luksoModule();
+const dmsans = DM_Sans({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 const injected = injectedModule({
   custom: [lukso],
@@ -21,9 +27,7 @@ const injected = injectedModule({
     const sorted = wallets.reduce<any[]>((sorted, wallet) => {
       if (wallet.label === "Universal Profiles") {
         sorted.unshift(wallet);
-      } else {
-        sorted.push(wallet);
-      }
+      } 
       return sorted;
     }, []);
     return sorted;
@@ -60,7 +64,7 @@ const web3Onboard = init({
   connect,
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {  
   return (
     <ThirdwebProvider
       clientId={process.env.NEXT_PUBLIC_CLIENT_ID}
@@ -78,9 +82,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           height={3}
           showOnShallow={true}
         />
-        <Navbar />
-        <Component {...pageProps} />
-        <ToastContainer />
+        <main className={dmsans.className}>
+          <Navbar />
+          <Component {...pageProps} />
+          <ToastContainer />
+          <NetworkModal />
+        </main>
       </Web3OnboardProvider>
     </ThirdwebProvider>
   );

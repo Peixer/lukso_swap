@@ -8,7 +8,7 @@
 }
 
 .nftContainer {
-  width: 200px;
+  width: 213px;
   margin: 8px;
   position: relative;
   overflow: hidden;
@@ -18,15 +18,17 @@
   transform: translate3d(0px, 0px, 0px);
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  justify-content: space-between;
+  padding: 14px;
   max-height: 382px;
+  border: 1px solid #97939340;
   transition: all 0.25s ease-in-out;
 }
 
 .nftContainer:hover {
   cursor: pointer;
   transform: translate3d(0px, -4px, 0px);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 8px rgba(248, 202, 202, 0.1);
 }
 
 .title {
@@ -36,7 +38,28 @@
 }
 
 .nftSelected{
-  border: 2px solid #7448db;
-  padding: 6px;
+  border: 4px solid #ffd8e4;
+  padding: 10px;
 }
 
+.nftGridEmpty{
+  color: #ED1D5E;
+  font-weight: bold;
+}
+
+.showInfoButton{
+  background-color: #FFEEF6;
+  letter-spacing: 1px;
+  color: #353945;
+  font-size: 12px;
+  font-weight: 600;
+  border: 0px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: all 0.15s ease-in-out;
+}
+
+.showInfoButton:hover{
+  background-color: #fad9e8;
+  cursor: pointer;
+}

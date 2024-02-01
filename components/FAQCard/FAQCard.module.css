@@ -1,0 +1,60 @@
+/* FAQCard.module.css */
+.faqContainer {
+  border-top: 2px solid gainsboro;
+  border-bottom: 2px solid gainsboro;
+  margin: 10px;
+  padding: 10px;
+  overflow: hidden;
+  width: 700px;
+  transition: height 0.3s ease-in-out;
+}
+
+.faqHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.faqTitle{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.arrow {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ccc;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  margin-left: 8px;
+  transition: transform 0.3s ease-in-out; 
+}
+
+.down {
+  transform: rotate(45deg);
+}
+
+.up {
+  transform: rotate(-135deg);
+}
+
+.description {
+  margin-top: 10px;
+  padding-top: 10px;
+  text-align: left;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out; 
+}
+
+.faqContainer.expanded {
+  height: auto;
+}
+
+.faqContainer.expanded .arrow {
+  transform: rotate(-135deg);
+}
+
+.faqContainer.expanded .description {
+  opacity: 1;
+}

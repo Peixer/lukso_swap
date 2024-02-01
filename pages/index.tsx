@@ -1,28 +1,34 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import loader from "../styles/Loader.module.css";
 import { useConnectWallet } from "@web3-onboard/react";
 import { useState } from "react";
 import Carousel from "../components/Carousel/Carousel";
-import { useProfile } from "../lukso/fetchProfile";
 import SearchBar, { Suggestion } from "../components/Searchbar/Searchbar";
+import { getAlgoliaAPIKey, getAlgoliaAppId, getAlgoliaEndpoint, getAlgoliaLocalEndpoint } from "../util/network";
+import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 
 const Home: NextPage = () => {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const [loading, setLoading] = useState(false); // Initialize loading state
+
   const fetchData = async (searchTerm: string) => {
     const apiUrl = '/api/proxy';
     try {
-      const response = await fetch(`${apiUrl}/prod_testnet_universal_profiles/query`, {
+      const response = await fetch(`${apiUrl}${getAlgoliaLocalEndpoint(wallet)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           query: searchTerm,
-          hitsPerPage: 100,
+          hitsPerPage: 5,
           page: 0,
+          appId: getAlgoliaAppId(wallet),
+          apiKey: getAlgoliaAPIKey(wallet),
+          endpoint: getAlgoliaEndpoint(wallet)
         }),
       });
 
@@ -54,9 +60,6 @@ const Home: NextPage = () => {
     fetchData(inputValue);
   };
 
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
-  const [loading, setLoading] = useState(false); // Initialize loading state
-
   const loadingConnect = async () => {
     setLoading(true);
     connect();
@@ -66,36 +69,20 @@ const Home: NextPage = () => {
   return (
     <main className={styles.main}>
       {/* Conditionally render the loader */}
-      {loading && (
-        <div className={loader.loaderContainer}>
-          <div className={loader.loader}></div>
-        </div>
-      )}
+      <LoadingSpinner isLoading={loading} />
       <div className={styles.container}>
         <Carousel />
         <div className={styles.content}>
           <div className={styles.hero}>
-            <div className={styles.heroBackground}>
-              <div className={styles.heroBackgroundInner}>
-                <Image
-                  src="/hero-gradient.png"
-                  width={1390}
-                  height={1390}
-                  alt="Background gradient from red to blue"
-                  quality={100}
-                  className={styles.gradient}
-                />
-              </div>
-            </div>
             <div className={styles.heroBodyContainer}>
               <div className={styles.heroBody}>
                 <h1 className={styles.heroTitle}>
-                  Discover <span className={styles.gradient}>LuksoSwap</span>
+                  Discover LuksoSwap
                 </h1>
 
                 <h2 className={styles.heroDescription}>
                   Trade your NFTs for their NFTs.{" "}
-                  <b className={styles.white}>Easily.</b>
+                  <b>Easily.</b>
                 </h2>
 
                 {/* Conditionally render the searchbar */}
@@ -115,7 +102,7 @@ const Home: NextPage = () => {
                         ? "Connecting"
                         : wallet
                         ? "Disconnect"
-                        : "Connect wallet"}
+                        : "Connect Wallet"}
                     </button>
                   </div>
                 </div>

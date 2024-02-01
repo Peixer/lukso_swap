@@ -1,4 +1,4 @@
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/types";
 import { config as LoadEnv } from "dotenv";
 import "@nomicfoundation/hardhat-toolbox";
 
@@ -7,7 +7,7 @@ LoadEnv();
 const config: HardhatUserConfig = {
   networks: {
     luksoTestnet: {
-      url: "https://rpc.testnet.lukso.gateway.fm",
+      url: "https://rpc.testnet.lukso.network",
       chainId: 4201,
       accounts: [process.env.PRIVATE_KEY as string],
     },
@@ -24,6 +24,21 @@ const config: HardhatUserConfig = {
         runs: 200,
       },
     },
+  },
+  etherscan: {
+    // no API is required to verify contracts
+    // via the Blockscout instance of LUKSO Testnet
+    apiKey: "no-api-key-needed",
+    customChains: [
+      {
+        network: "luksoTestnet",
+        chainId: 4201,
+        urls: {
+          apiURL: "https://api.explorer.execution.testnet.lukso.network/api",
+          browserURL: "https://explorer.execution.testnet.lukso.network",
+        },
+      },
+    ],
   },
 };
 

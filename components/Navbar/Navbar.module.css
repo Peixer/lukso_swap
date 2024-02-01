@@ -24,6 +24,7 @@
   width: 98%;
   max-width: 1260px;
   background-color: transparent !important;
+  border-bottom: 1px solid #97939340;
 }
 
 .navLeft {
@@ -42,20 +43,6 @@
   gap: 24px;
 }
 
-.link {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  line-height: 16px;
-  margin-top: 4px;
-  transition: color 0.3s ease-in-out;
-}
-
-.link:hover {
-  color: rgba(255, 255, 255, 1);
-}
-
 .homeLink:hover {
   cursor: pointer;
   opacity: 0.8;
@@ -67,6 +54,10 @@
   gap: 16px;
   align-items: center;
   justify-content: center;
+}
+
+.title{
+  color: #ED1D5E;
 }
 
 .profileImage {
@@ -88,9 +79,26 @@
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
-/* Sreens less than 720px */
-@media (max-width: 500px) {
-  .navConnect {
-    display: none !important;
+.connectButton{
+  background-color: #FFEEF6;
+  letter-spacing: 1.5px;
+  color: #353945;
+  font-size: 12px;
+  font-weight: 600;
+  border: 0px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: all 0.15s ease-in-out;
+}
+
+.connectButton:hover{
+  background-color: #fad9e8;
+  cursor: pointer;
+}
+
+/* Sreens less than 768px */
+@media (max-width: 768px) {
+  .hideLink {
+    display: none;
   }
 }

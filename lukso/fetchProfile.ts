@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react';
 
 import { getInstance, UniversalProfileSchema } from './schemas';
 import { Profile } from './types';
+import { useConnectWallet } from '@web3-onboard/react';
 
 export const useProfile = (address: string): [Profile] => {
   const [profile, setProfile] = useState<Profile>(new Profile('', ''));
+  const [{ wallet }] = useConnectWallet();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const profileInstance = getInstance(
           UniversalProfileSchema,
-          address as string
+          address as string,
+          wallet
         );
 
         const result = await profileInstance.fetchData('LSP3Profile');
