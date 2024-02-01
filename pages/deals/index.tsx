@@ -1,5 +1,5 @@
 // pages/deals
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Container from "../../components/Container/Container";
 import styles from "./Deals.module.css";
 import {
@@ -21,9 +21,6 @@ export default function Deals() {
   const [swaps, setSwaps] = useState<any[]>([]);
   const [{ wallet }] = useConnectWallet();
 
-  useEffect(() => {
-    fetchContract();
-  }, []);
 
   useEffect(() => {
     if(wallet === null){
@@ -79,6 +76,9 @@ export default function Deals() {
     }
   }
 
+  useEffect(() => {
+    fetchContract();
+  }, [fetchContract]);
   return (
     <>
       <Container maxWidth="lg">

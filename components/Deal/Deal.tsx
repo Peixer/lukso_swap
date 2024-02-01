@@ -9,7 +9,7 @@ import { checkLSP7AuthorizeOperator, checkLSP8AuthorizeOperator } from "../../ut
 import { IPFS_URL } from "../../util/config";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { Asset, Metadata } from "../../lukso/types/asset";
-import { fetchLsp8Metadata } from "../../lukso/fetchLSP8Metadata";
+import { fetchLsp8Metadata } from "../../lukso/fetchLsp8Metadata";
 import { fetchLsp7Metadata } from "../../lukso/fetchLSP7Metadata";
 import { useProfile } from "../../lukso/fetchProfile";
 
@@ -68,7 +68,7 @@ export default function DealComponent({ deal }: Props) {
           setLoading(false);
         });
     }
-  }, [deal]);
+  }, [deal, wallet]);
 
   useEffect(() => {
     if (tradeUser.profileImage.length > 0) {

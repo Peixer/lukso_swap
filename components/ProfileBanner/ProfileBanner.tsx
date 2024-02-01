@@ -38,7 +38,7 @@ export function ProfileBanner({address}: Props) {
       }
       setUserAddress(address);
     }
-  }, [address]);
+  }, [address, userAddress]);
 
   useEffect(() => {
     if (user.backgroundImage.length > 0) {
@@ -47,7 +47,7 @@ export function ProfileBanner({address}: Props) {
     if (user.profileImage.length > 0) {
       setIconImageURL(`${imageIpfsGateway}${user.profileImage[0].url.slice(7)}`);
     }
-  }, [user.backgroundImage, user.profileImage]);
+  }, [imageIpfsGateway, user.backgroundImage, user.profileImage]);
   
   return (
     <div className={styles.profileContainer}>

@@ -11,7 +11,7 @@ import { FetchDataOutput } from '@erc725/erc725.js/build/main/src/types/decodeDa
 import { ERC725JSONSchema } from '@erc725/erc725.js/build/main/src/types/ERC725JSONSchema';
 import { useConnectWallet } from '@web3-onboard/react';
 import { getWalletProvider } from '../util/network';
-import { fetchLsp8Metadata } from './fetchLSP8Metadata';
+import { fetchLsp8Metadata } from './fetchLsp8Metadata'
 import { INTERFACE_IDS } from '@lukso/lsp-smart-contracts';
 import { BigNumber } from 'ethers';
 import { fetchLsp7Metadata } from './fetchLSP7Metadata';

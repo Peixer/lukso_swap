@@ -43,7 +43,7 @@ export function NetworkModal() {
     } else{ // We need to connect the user
       console.debug("user needs to connect a wallet");
     }
-  }, [connectedChain, settingChain]);
+  }, [chains, connectedChain, settingChain]);
 
   if (!isModalOpen) {
     return null;
