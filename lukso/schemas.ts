@@ -171,7 +171,6 @@ export const LSP10ReceivedVaultsSchema: ERC725JSONSchema[] = [
 
 // Parameters for the ERC725 instance
 const config = { ipfsGateway: NETWORKS.l16.imageIpfs.url };
-export const TESTNET_RPC_ENDPOINT = 'https://rpc.testnet.lukso.network';
 
 export function getInstance(
   providedSchema: ERC725JSONSchema[],

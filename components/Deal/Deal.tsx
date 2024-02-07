@@ -68,7 +68,7 @@ export default function DealComponent({ deal }: Props) {
           setLoading(false);
         });
     }
-  }, [deal, wallet]);
+  }, []);
 
   useEffect(() => {
     if (tradeUser.profileImage.length > 0) {
