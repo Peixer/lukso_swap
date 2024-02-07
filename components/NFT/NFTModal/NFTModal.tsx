@@ -86,7 +86,7 @@ export default function NFTModal({ nft, onClose }: Props) {
                   <div className={styles.dataGeneralContainer}>
                     <p className={styles.nftName}>{nft.name}</p>
                     {nft.metadata?.name ? (<p className={styles.nftMetadataName}>{nft.metadata?.name && nft.metadata?.name.length > 60 ? `${nft.metadata?.name.slice(0, 60)}...` : nft.metadata?.name}</p>) : (<p>No name available.</p>)}
-                    {nft.metadata?.description ? (<span className={styles.nftMetadataDescription}>{nft.metadata?.description && nft.metadata?.description.length > 60 ? `${nft.metadata?.description.slice(0, 60)}...` : nft.metadata?.description}</span>) : (<span>No description available.</span>)}
+                    {nft.metadata?.description ? (<span className={styles.nftMetadataDescription}>{nft.metadata?.description && nft.metadata?.description.length > 300 ? `${nft.metadata?.description.slice(0, 300)}...` : nft.metadata?.description}</span>) : (<span>No description available.</span>)}
                   </div>
                   <div className={styles.dataAttributesContainer}>
                     <div>

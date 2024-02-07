@@ -9,8 +9,6 @@ import type { ERC725JSONSchema } from '@erc725/erc725.js'
 import type { LSP4DigitalAssetMetadataJSON } from '@lukso/lsp-smart-contracts'
 import type { URLDataWithHash } from '@erc725/erc725.js/build/main/src/types'
 import { resolveUrl } from '../util/urlResolver'
-import { getInstance } from './schemas'
-import { validateLsp4MetaData } from './validateLSP4Metadata'
 import { WalletState } from '@web3-onboard/core'
 import { ethers } from 'ethers'
 import { getWalletProvider } from '../util/network'
@@ -65,6 +63,15 @@ const getLsp4Metadata = async (assetAddress: string, wallet: WalletState | null)
 }
 
 const formatUrl = (url: string) => {
+
+    if(url.includes("data:application/json;base64")){
+      let base64EncodedData = url.split("data:application/json;base64")[1];
+      // Decode base64 string
+      const decodedString = atob(base64EncodedData);
+
+      // Parse JSON
+      return JSON.parse(decodedString);
+    }
 
     if(url.startsWith("/")){
         return "https://" + url.slice(1);

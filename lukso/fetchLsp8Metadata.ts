@@ -128,6 +128,28 @@ const formatUrl = (url: string) => {
     return IPFS_URL+url;
 }
 
+const isDataEncoded = (data: string) => {
+  if(data.includes("data:application/json;base64")){
+    return true;
+  }
+  return false;
+}
+
+const decodeData = (data: string) => {
+  if(data.includes("data:application/json;base64")){
+    let base64EncodedData = data.split("data:application/json;base64,")[1];
+    // Decode base64 string
+    const decodedString = atob(base64EncodedData);
+
+    console.log("decoded: ", JSON.parse(decodedString));
+
+    // Parse JSON
+    return JSON.parse(decodedString);
+  } else{
+    return "Unable to decode metadata..."
+  }
+}
+
 /**
  * Get LSP8 metadata  as json object
  * It first try to check asset LSP4Metadata key and when it's empty we fall back to LSP8TokenMetadataBaseURI key
@@ -196,7 +218,7 @@ const getLsp8Metadata = async (
   })
 
   // fetch json file
-  const lsp8Metadata = await fetch(formatUrl(url)).then(async response => {
+  const lsp8Metadata = isDataEncoded(url) ? decodeData(url) : await fetch(formatUrl(url)).then(async response => {
     if (!response.ok) {
       let text: any = (await response.text()) || response.statusText
       if (text) {
