@@ -50,8 +50,8 @@ export function NetworkModal() {
   }
   
   return (
-    <div className={styles.modalContainer}>
-      <div className={styles.modalInnerContainer}>
+    <div className={styles.networkModalContainer}>
+      <div className={styles.networkModalInnerContainer}>
         <h3 className="mt-0">Wrong network</h3>
         <p>You need to switch network to access LuksoSwap</p>
         <div className={styles.buttonContainer}>

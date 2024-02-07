@@ -1,5 +1,5 @@
 /* NetworkModal.module.css */
-.modalContainer {
+.networkModalContainer {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   z-index: 3;
 }
 
-.modalInnerContainer {
+.networkModalInnerContainer {
   background: white;
   padding: 24px 20px;
   border-radius: 8px;
